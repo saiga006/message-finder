@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="somewhat_red">#D14444</color>
+    <color name="primaryColor">#303f9f</color>
+    <color name="primaryLightColor">#666ad1</color>
+    <color name="primaryDarkColor">#001970</color>
+    <color name="secondaryColor">#2979ff</color>
+    <color name="secondaryLightColor">#75a7ff</color>
+    <color name="secondaryDarkColor">#004ecb</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#000000</color>
+    <color name="app_logo_background">@color/primaryTextColor</color>
+</resources>

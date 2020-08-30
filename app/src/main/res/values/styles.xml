@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- custom theme for entire app -->
+    <style name="MyAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- primary color for app bar, UI elements(material design) -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <!-- dark color for status bar -->
+         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <!-- color used for edit text and other views in highlighted/ focused state -->
+        <item name="colorAccent">@color/secondaryLightColor</item>
+        <!-- custom style for button-->
+        <item name="buttonStyle">@style/MyButtonViewStyle</item>
+        <!-- background for main activity, gradient of blue and white at 45 deg -->
+        <item name="android:windowBackground">@drawable/background_gradient</item>
+    </style>
+
+    <!-- custom style for textView (material design) -->
+    <style name="MyTextViewStyle" parent="android:Widget.TextView">
+        <!-- use text color of the derived theme-->
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <!-- custom background color -->
+        <item name="android:background">@drawable/rounded_button</item>
+        <!-- left margin alignment -->
+        <item name="android:layout_marginStart">8dp</item>
+        <!-- left padding -->
+        <item name="android:paddingStart">16dp</item>
+        <!-- align the text as center and left side -->
+        <item name="android:gravity">center|left</item>
+        <!-- make the text to appear Big -->
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+    </style>
+
+    <!-- custom style for Button -->
+    <style name="MyButtonViewStyle" parent="Widget.AppCompat.Button">
+        <!-- assign a gradient(somewhat red and blue) background to a button -->
+          <item name="android:background">@drawable/rounded_button_gradient</item>
+        <!-- white text color to button text -->
+          <item name="android:textColor">@color/primaryTextColor</item>
+        <!-- make the button to pop-up -->
+        <item name="android:elevation">30dp</item>
+    </style>
+</resources>
+

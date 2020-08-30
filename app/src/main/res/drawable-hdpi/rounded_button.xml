@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- color of the outline and the width -->
+    <stroke
+        android:color="@color/primaryLightColor"
+        android:width="2.5dp" />
+    <!-- fills color of the textview background-->
+    <solid android:color="@android:color/transparent"/>
+    <!-- curved rectangle -->
+    <corners android:radius="10dp"/>
+    <!-- adds padding inside the text view from the outline-->
+    <padding android:bottom="4dp" android:left="4dp" android:right="4dp" android:top="4dp"/>
+</shape>

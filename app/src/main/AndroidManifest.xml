@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.saiga.find.messagefinder">
+    <!-- name of the android package -->
+
+    <!-- permission needed to run a foreground service by app, forced from API 28(P)  -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <!-- permission needed to receive SMS packets -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
+    <!--permission needed to trigger vibration, on receiving notification -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <!-- app icon for legacy devices-->
+    <!-- app name -->
+    <!-- app round_icon  -->
+    <!-- supports for right to left layout for languages that require it -->
+    <!-- extending the custom theme to entire app -->
+    <application
+        android:icon="@mipmap/app_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/app_logo_round"
+        android:supportsRtl="true"
+        android:theme="@style/MyAppTheme">
+
+        <!-- activity registration with system -->
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- service needs to be enabled for the system to create it, but not exported,
+        to prevent being invoked from external components-->
+        <service
+            android:name=".SMSForegroundService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+        <!-- receiver must be registered for receiving broadcasts from senders who has the below
+        permission,so that only android framework sends broadcast to our app and not some malicious
+        one.Need to be enabled and exported to get the text message from the android framework -->
+        <receiver android:name=".SMSReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <!-- need to listen to this intent action to receive sms -->
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient android:angle="-45"  android:startColor="@color/somewhat_red"
+     android:endColor="@color/secondaryLightColor"/>
+    <!-- make the button to appear circled rectangle -->
+    <corners android:radius="20dp"/>
+    <!-- adds padding inside the button from the outline-->
+    <padding android:bottom="2dp" android:left="2dp" android:right="2dp" android:top="2dp"/>
+</shape>
