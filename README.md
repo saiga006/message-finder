@@ -26,6 +26,20 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
 
   - Full verbose comments in code is available
 
+### App Screenshots:
+
+  1. <img src="https://github.com/saiga006/message-finder/blob/master/App_Notification.png" width="150" height="300">
+     
+  > "Notification when priority message is received"
+  
+  2. <img src="https://github.com/saiga006/message-finder/blob/master/Activity_Screen.png" width="150" height="300">
+  
+  > "Activity Screen of Message Finder, where user inputs the contact number and keyword, for which SOS has to be raised"
+  
+  3. <img src="https://github.com/saiga006/message-finder/blob/master/Input_Field_ActivityScreen.png" width="150" height="300">
+  
+  > "Example user input"
+
 #### Resources:
   - [Android Developer Guide - Notifications](https://developer.android.com/guide/topics/ui/notifiers/notifications)
   - [Android Developer Guide - MediaPlayer](https://developer.android.com/guide/topics/media/mediaplayer)
