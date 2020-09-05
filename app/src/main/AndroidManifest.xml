@@ -25,7 +25,7 @@
         android:theme="@style/MyAppTheme">
 
         <!-- activity registration with system -->
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:theme="@style/MyAppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

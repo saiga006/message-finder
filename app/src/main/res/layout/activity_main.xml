@@ -92,11 +92,18 @@
             android:text="@string/clear_button" />
        <!-- display app logo -->
         <ImageView
+            android:id="@+id/brand_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/clear"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/logo"
             android:src="@drawable/app_logo" />
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/user_message_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/brand_icon"/>
     </RelativeLayout>
+
 </ScrollView>

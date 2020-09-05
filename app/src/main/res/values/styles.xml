@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- custom theme for entire app -->
-    <style name="MyAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="MyAppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- primary color for app bar, UI elements(material design) -->
         <item name="colorPrimary">@color/primaryColor</item>
         <!-- dark color for status bar -->
@@ -12,8 +12,13 @@
         <item name="buttonStyle">@style/MyButtonViewStyle</item>
         <!-- background for main activity, gradient of blue and white at 45 deg -->
         <item name="android:windowBackground">@drawable/background_gradient</item>
+        <!-- snackbar styling -->
+        <item name="snackbarStyle">@style/Widget.App.Snackbar</item>
     </style>
-
+    <!-- splash drawable to be applied as splash window, before activity shows up -->
+    <style name="MyAppTheme.Splash">
+        <item name="android:windowBackground">@drawable/splash_drawable</item>
+    </style>
     <!-- custom style for textView (material design) -->
     <style name="MyTextViewStyle" parent="android:Widget.TextView">
         <!-- use text color of the derived theme-->
@@ -38,6 +43,12 @@
           <item name="android:textColor">@color/primaryTextColor</item>
         <!-- make the button to pop-up -->
         <item name="android:elevation">30dp</item>
+    </style>
+
+    <!-- snackbar customization material theming -->
+    <style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="android:background">@drawable/snackbar_shape</item>
+        <item name="elevation">20dp</item>
     </style>
 </resources>
 

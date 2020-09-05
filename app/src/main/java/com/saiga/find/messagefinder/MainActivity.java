@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 // handle to package manager system service
 import android.content.pm.PackageManager;
 // for controlling the shared preference
+import android.hardware.input.InputManager;
 import android.preference.PreferenceManager;
 // for handing null and non null annotations based methods
 import android.support.annotation.NonNull;
@@ -21,12 +22,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+// for disabling ime temporarily
+import android.view.inputmethod.InputMethodManager;
 // for displaying toast message
-import android.widget.Toast;
+//import android.widget.Toast;
+// for Snackbar message support
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String toastText = "saved the config to capture SMS packets";
+    private static final String CONFIG_MSG = "saved the config to capture SMS packets";
     private static final String triggerStatus = "Triggered!";
     private static final String clearStatus = "Cleared!";
     private static final String smsPermission = Manifest.permission.RECEIVE_SMS;
@@ -37,10 +44,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String messageStr = null;
     private Button trigButton = null;
     private Button clearButton = null;
+    private CoordinatorLayout mUserMsgLayout = null;
     // just to handle runtime our runtime permission request
     private static final int permRequestCode = 123;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // clear the splash, and set the normal app window
+        setTheme(R.style.MyAppTheme);
         super.onCreate(savedInstanceState);
         // inflates the contents from activity_main.xml
         setContentView(R.layout.activity_main);
@@ -49,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          trigButton = findViewById(R.id.trigger);
         // button for clearing the configuration and stopping the service in background (indirectly)
          clearButton = findViewById(R.id.clear);
+
+         mUserMsgLayout = findViewById(R.id.user_message_layout);
 
          /* deprecated  : intent to trigger for SMS foreground Service
        // serviceIntent = new Intent(this,SMSForegroundService.class);
@@ -76,17 +88,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // a app specific file to store the configurations (persists across reboots)
                 EditText contactView = findViewById(R.id.contact_value);
                 EditText messageView = findViewById(R.id.message_value);
+
+               // clear focus to hide the IME
+                clearSoftKeyboardState();
+                contactView.clearFocus();
+                messageView.clearFocus();
+
                 contactStr = contactView.getText().toString();
                 messageStr =  messageView.getText().toString();
                 // if there is no message, there is no point of saving the config
                 if(messageStr.isEmpty()){
-                    // display some alert message to user.
-                    Toast.makeText(this,ALERT_MSG,Toast.LENGTH_SHORT).show();
+                    // @deprecated display some alert message to user.
+                    //Toast.makeText(this,ALERT_MSG,Toast.LENGTH_SHORT).show();
+                    Snackbar.make(mUserMsgLayout,ALERT_MSG,Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 // Don't save the config if the runtime permission is not granted by user
                 if (!checkSmsPermission()){
-                    Toast.makeText(this,USER_NOTIFICATION_MSG,Toast.LENGTH_LONG).show();
+                    Snackbar.make(mUserMsgLayout,USER_NOTIFICATION_MSG,Snackbar.LENGTH_LONG).show();
+                    //@deprecated Toast.makeText(this,USER_NOTIFICATION_MSG,Toast.LENGTH_LONG).show();
                     return;
                 }
                 // retrieve the input text from the user and save it in the persistent file
@@ -101,6 +121,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // get the edit text views to clear the text automatically
                 EditText contactView = findViewById(R.id.contact_value);
                 EditText messageView = findViewById(R.id.message_value);
+                // clear focus to hide the IME
+                clearSoftKeyboardState();
+                contactView.clearFocus();
+                messageView.clearFocus();
                 int clear_position = 0;
                 //get shared preference file specific to this app, to clear the saved config if it exists
                 SharedPreferences saved = PreferenceManager.getDefaultSharedPreferences(this);
@@ -164,10 +188,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         configEditor.putString("message",messageStr.isEmpty()?null:messageStr);
         configEditor.apply();
         // a small temporary Ui Message to be displayed to user on successful config. save
-        Toast.makeText(this,toastText,Toast.LENGTH_LONG).show();
+        //@deprecated Toast.makeText(this,toastText,Toast.LENGTH_LONG).show();
+        Snackbar.make(mUserMsgLayout,CONFIG_MSG,Snackbar.LENGTH_LONG).show();
         // notify the trigger status in view to the user
         trigButton.setText(triggerStatus);
         // set the clear button to initial state
         clearButton.setText(R.string.clear_button);
+    }
+
+    private void clearSoftKeyboardState (){
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        assert inputMethodManager != null;
+        View focussedView = getCurrentFocus();
+        if (focussedView != null) {
+        inputMethodManager.hideSoftInputFromWindow(focussedView.getWindowToken(),0);
+        }
     }
 }

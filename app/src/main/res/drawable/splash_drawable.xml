@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- create a splash drawable -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:opacity="opaque">
+<item android:drawable="@drawable/background_gradient"/>
+    <item android:width="200dp" android:height="200dp" android:gravity="center"><bitmap android:src="@drawable/app_logo" android:gravity="center" android:alpha="0.9"/></item>
+</layer-list>
