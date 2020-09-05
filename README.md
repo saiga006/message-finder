@@ -44,5 +44,9 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   - Good tutorial on [custom notifications](https://medium.com/hootsuite-engineering/custom-notifications-for-android-ac10ca67a08c)
   - For [controlling volume and about fixed volumes devices](https://developer.android.com/guide/topics/media-apps/volume-and-earphones) in android
   - For app [logo design](https://www.freelogodesign.org/) and adding [app icons](https://medium.com/@ujikit/add-icons-to-the-android-application-from-android-studio-ide-cd1af9348749) and [notification icons](https://developer.android.com/studio/write/image-asset-studio?hl=de#create-notification)
+  - Adding Splash Screen [Tutorial](https://android.jlelse.eu/launch-screen-in-android-the-right-way-aca7e8c31f52)
+  - Integration [Material Design](https://github.com/material-components/material-components-android/blob/master/docs/getting-started.md)
+    and customizing [Snackbar](https://material.io/develop/android/components/snackbars)
+  - App Signing [Tutorial](https://youtu.be/akDXw9n3gFY)
   - Obviously StackOverflow for issues during development and bug fixing :-)
   
