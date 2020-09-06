@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "com.saiga.find.messagefinder"
         // backward compatibility supported till android N
-        minSdkVersion(24)
+        minSdkVersion(23)
         // guaranteed to work property in Android 9, obeying Android 9 behavior changes
         targetSdkVersion(28)
         versionCode 1

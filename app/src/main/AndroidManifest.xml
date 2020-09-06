@@ -3,6 +3,9 @@
     package="com.saiga.find.messagefinder">
     <!-- name of the android package -->
 
+    <!-- permission needed to access user configured ringtone not falling under phone defaults -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <!-- permission needed to run a foreground service by app, forced from API 28(P)  -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
