@@ -88,7 +88,7 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
 
         // gets the uri of content provider that manages user ringtone values
         ringUri = RingtoneManager.getActualDefaultRingtoneUri(this,RingtoneManager.TYPE_RINGTONE);
-
+        Log.d(TAG,"Print the ringtone Uri" + ringUri);
         // Notification manager
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // Notification Channel is needed from Android O onwards, earlier version doesn't have this new API.
@@ -136,9 +136,11 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
         if (Objects.equals(intent.getAction(), startFgService))
         {
             Log.d(TAG,"foregroundService got created");
-            // get the payload
+            // get the payload, keyword, sms number
             String senderAddress = intent.getStringExtra("From");
             String messageContent = intent.getStringExtra("Payload");
+            String keyword = intent.getStringExtra("Keyword");
+            Log.d(TAG,messageContent);
             // prepare the stop intent and pack inside the pending intent and pass it to notification manager
             Intent stopIntent = new Intent(this,SMSForegroundService.class);
             stopIntent.setAction(stopFgService);
@@ -150,13 +152,16 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
             // alarm in DND mode too.
             Notification notification = new NotificationCompat.Builder(this,channelId)
                     .setContentTitle("Priority Message Received!")
-                    .setContentText("Received the text "+messageContent+" from "+senderAddress)
+                    .setContentText("Received the text -- "+ keyword +" from "+senderAddress)
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setContentIntent(stopPlayback)
                     .setColor(getResources().getColor(R.color.somewhat_red,null))
                     .setColorized(true)
                     .setCategory(NotificationCompat.CATEGORY_ALARM)
-                    .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("Touch to dismiss"))
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .setBigContentTitle("Priority Message Received!")
+                            .setSummaryText("Touch to dismiss")
+                            .bigText("Received the text "+messageContent+" from "+senderAddress))
                     .setSmallIcon(R.drawable.notification_mf_icon)
                     .setAutoCancel(true).build();
 

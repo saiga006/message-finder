@@ -14,6 +14,8 @@ import android.telephony.SmsMessage;
 
 // log and util functions
 import android.util.Log;
+
+//import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -76,15 +78,17 @@ public class SMSReceiver extends BroadcastReceiver {
                 Log.d(TAG, "reading message " + number);
                 // convert the msg into words and prepare for comparison with the keyword configured
                 String[] words = msg.getDisplayMessageBody().toLowerCase().split("\\s+");
-                //Log.d(TAG,Arrays.toString(words));
+                //Log.d(TAG, Arrays.toString(words));
                 for (String word : words) {
                     //    Log.d(TAG, word + "*");
                     if (word.equals(content)) {
-                        messageReceived = content;
+                        messageReceived = msg.getDisplayMessageBody();
                         // get the contact address
                         contactInfo = msg.getDisplayOriginatingAddress();
                         // pack inside the intent and send it to the service
                         triggerIntent.putExtra("From",contactInfo);
+                        triggerIntent.putExtra("Keyword",content);
+                        // pack also the received full message
                         triggerIntent.putExtra("Payload",messageReceived);
                         Log.d(TAG, "Found the keyword " + content + "in msg " + msg.getDisplayMessageBody());
                         // inform user about the priority notification
@@ -95,6 +99,7 @@ public class SMSReceiver extends BroadcastReceiver {
                         } else {
                             context.startService(triggerIntent);
                         }
+                        break;
                     }
                 }
 
