@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- add scroll view as root view, since the layout extends the screen size in landscape mode -->
+<!-- add scroll view as root view, add viewport to fill up the space between snackbar layout and the screen end &
+ also the layout extends the screen size in landscape mode -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".MainActivity">
 
     <!-- add parent layout as relative layout to control/align position of child elements
-    relative to the screen boundaries -->
+    relative to the screen boundaries, gains focus before the child elements, to prevent
+     IME from popping up-->
     <RelativeLayout
+        android:id="@+id/ui_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
 
         <!-- add linear layout container to adjust elements to any screen size width -->
         <LinearLayout
@@ -34,7 +40,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:focusable="true"
                 android:hint="@string/contact_value"
                 android:inputType="phone"
                 android:textAppearance="?android:attr/textAppearance"
@@ -103,7 +108,8 @@
             android:id="@+id/user_message_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/brand_icon"/>
+            android:layout_below="@id/brand_icon"
+            android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 
 </ScrollView>
