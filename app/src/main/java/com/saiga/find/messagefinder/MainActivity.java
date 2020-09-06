@@ -156,12 +156,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // check if the permission has been granted before
         if(ContextCompat.checkSelfPermission(getApplicationContext(),smsPermission)== PackageManager.PERMISSION_GRANTED) {
             mPermGranted = true;
-        } else if(!shouldShowRequestPermissionRationale(smsPermission)) {
-            // invoked when user has rejected our requested and clicked the permission dialog to
-            // to never show again
-            // need to navigate the user to new settings app
-            Log.d(TAG,"navigate/suggest user to choose the permission from settings");
-        } else {
+        }  else {
+            Log.d(TAG,"Request Permissions is invoked");
             // throw a system dialog to request permission from user, if permission hasn't been granted before
             requestPermissions(new String[]{smsPermission},permRequestCode);
         }
@@ -177,6 +173,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if ((grantResults.length>0) && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 // save the SMS configuration to trigger notification, when permission is granted
                 setSmsConfig();
+            } else if ((grantResults.length>0) && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                if(!shouldShowRequestPermissionRationale(smsPermission)) {
+                    // invoked when user has rejected our requested and clicked the permission dialog to
+                    // to never show again
+                    // need to navigate the user to new settings app
+                    Log.d(TAG,"should show rationale");
+                    Log.d(TAG,"navigate/suggest user to choose the permission from settings");
+                }
             }
         }
     }
