@@ -9,8 +9,8 @@ android {
         minSdkVersion(23)
         // guaranteed to work property in Android 9, obeying Android 9 behavior changes
         targetSdkVersion(28)
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
