@@ -1,14 +1,14 @@
 # message-finder
 An app to trigger **notifications** when receiving **priority messages**(*determined by user keyword*) 
 
-## Beta Release
+## Beta Release V1.2.0
 
 ### How to use:
 
   1. User inputs contact number(optional) and the keyword(required), for which SOS kind of notification will be raised.
   2. Press trigger button to save the config.
   3. So that the app uses it everytime, when a sms is received and validates it, even after reboot it works.
-  4. User needs to accept the READ SMS permission or else the app wouldn't work fine as expected.
+  4. User needs to accept the READ SMS permission and READ External Storage permission(for ringtone access) or else the app wouldn't work fine as expected.
   5. To stop the SOS app functionality, press the clear config button.
 
 ### Features:
@@ -17,10 +17,20 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   - Triggers notification on when the keyword is matched with received message with vibration, colored notification along with audio playback
   - On receiving notification, ringtone is played at high volume, even if the phone is in silent mode, uses alarm stream at full volume.
   - In some phones, it works in DND mode, as it uses alarm category for notification
-
+  
+#### Beta 1.2.0 Changelog:  
+ 
+  - App permissions can be configured easily with new request permissions design
+  - Bug Fixes
+    1. IME popup glitches, UI glitches, landscape mode glitches
+    2. Fixed runtime Permission request
+    3. Fixed the ringtone issue that was occuring in some phones
+    4. Snackbar related bug fixes
+    
+    
 ### Compatibility: 
 
-  - Currently expected to work on phones from Android N to Android P.
+  - Currently expected to work on phones from Android M to Android P.
 
 ### Code Verbosity Level: 
 
