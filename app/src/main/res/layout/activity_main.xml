@@ -42,6 +42,7 @@
                 android:layout_weight="1"
                 android:hint="@string/contact_value"
                 android:inputType="phone"
+                android:maxLength="10"
                 android:textAppearance="?android:attr/textAppearance"
                 tools:ignore="Autofill" />
 

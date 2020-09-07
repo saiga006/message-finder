@@ -15,8 +15,10 @@ import android.telephony.SmsMessage;
 // log and util functions
 import android.util.Log;
 
-//import java.util.Arrays;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
+
 
 
 public class SMSReceiver extends BroadcastReceiver {
@@ -45,17 +47,13 @@ public class SMSReceiver extends BroadcastReceiver {
         // if stored value is empty, assigning null
         String number = msgPref.getString("contact",null);
 
-        if (number!=null) {
-            number = number.toLowerCase();
-        }
         // we retrieve the keyword/content configured in an app file and convert into lower case
         //for easy comparison
-        String content = msgPref.getString("message",null);
-        if (content!=null) {
+        HashSet<String> keywordContents = (HashSet<String>)msgPref.getStringSet("message",null);
+        if (keywordContents!=null) {
             msgConfigured =true;
-            content=content.toLowerCase();
         }
-        Log.d(TAG,number+content);
+        Log.d(TAG,number+keywordContents);
         // if the keyword is not configured in app file we simply exit.
         if (!msgConfigured){
             return;
@@ -77,20 +75,20 @@ public class SMSReceiver extends BroadcastReceiver {
             if ((number == null) || ((Objects.requireNonNull(msg.getOriginatingAddress())).contains(number))) {
                 Log.d(TAG, "reading message " + number);
                 // convert the msg into words and prepare for comparison with the keyword configured
-                String[] words = msg.getDisplayMessageBody().toLowerCase().split("\\s+");
-                //Log.d(TAG, Arrays.toString(words));
+                String[] words = msg.getDisplayMessageBody().toLowerCase().split("[^\\w\\d]+");
+                Log.d(TAG, Arrays.toString(words));
                 for (String word : words) {
                     //    Log.d(TAG, word + "*");
-                    if (word.equals(content)) {
+                    if (keywordContents.contains(word)) {
                         messageReceived = msg.getDisplayMessageBody();
                         // get the contact address
                         contactInfo = msg.getDisplayOriginatingAddress();
                         // pack inside the intent and send it to the service
                         triggerIntent.putExtra("From",contactInfo);
-                        triggerIntent.putExtra("Keyword",content);
+                        triggerIntent.putExtra("Keyword",word);
                         // pack also the received full message
                         triggerIntent.putExtra("Payload",messageReceived);
-                        Log.d(TAG, "Found the keyword " + content + "in msg " + msg.getDisplayMessageBody());
+                        Log.d(TAG, "Found the keyword " + word + " in msg " + msg.getDisplayMessageBody());
                         // inform user about the priority notification
                         // call our service and make it as foreground (visible notifications to user with an alarm)
                         // this is to background restrictions introduced in Android O, we should use foreground service

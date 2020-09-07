@@ -32,6 +32,11 @@ import android.support.design.widget.Snackbar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+// util functions for processing multiple keywords support
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 // to launch as a seperate task
 import static android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
 
@@ -113,8 +118,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 contactView.clearFocus();
                 messageView.clearFocus();
 
-                contactStr = contactView.getText().toString();
-                messageStr =  messageView.getText().toString();
+                contactStr = contactView.getText().toString().toLowerCase();
+                messageStr =  messageView.getText().toString().toLowerCase();
                 // if there is no message, there is no point of saving the config
                 if(messageStr.isEmpty()){
                     // @deprecated display some alert message to user.
@@ -243,8 +248,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setSmsConfig(){
         SharedPreferences config = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor configEditor = config.edit();
+        // splits the string into words, removes duplicates, blank spaces and commas
+        String[] extractedKeywords = messageStr.split("\\s*,\\s*|\\s+");
+        Log.d(TAG, "keyword :" + Arrays.asList(extractedKeywords));
+        Set<String> keywords = new HashSet<String>();
+        Collections.addAll(keywords,extractedKeywords);
+        // now accepts multiple keywords
         configEditor.putString("contact",contactStr.isEmpty()?null:contactStr);
-        configEditor.putString("message",messageStr.isEmpty()?null:messageStr);
+        configEditor.putStringSet("message",keywords.isEmpty()?null:keywords);
         configEditor.apply();
         // a small temporary Ui Message to be displayed to user on successful config. save
         //@deprecated Toast.makeText(this,toastText,Toast.LENGTH_LONG).show();
@@ -258,9 +269,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void clearSoftKeyboardState (){
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         assert inputMethodManager != null;
-        View focussedView = getCurrentFocus();
-        if (focussedView != null) {
-        inputMethodManager.hideSoftInputFromWindow(focussedView.getWindowToken(),0);
+        // gets the current focused edit text
+        View focusedView = getCurrentFocus();
+        if (focusedView != null) {
+            // hide the IME and make the focus to get lost for the edit text
+        inputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(),0);
         }
     }
 

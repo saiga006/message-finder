@@ -12,8 +12,12 @@
         <item name="buttonStyle">@style/MyButtonViewStyle</item>
         <!-- background for main activity, gradient of blue and white at 45 deg -->
         <item name="android:windowBackground">@drawable/background_gradient</item>
-        <!-- snackbar styling -->
+        <!-- custom snackbar styling -->
         <item name="snackbarStyle">@style/Widget.App.Snackbar</item>
+        <!-- adjust colors of edit text when used and in normal state-->
+        <item name="colorControlNormal">@color/primaryLightColor</item>
+        <item name="colorControlActivated">@color/somewhat_red</item>
+        <item name="android:textColorHighlight">@color/secondaryColor</item>
     </style>
     <!-- splash drawable to be applied as splash window, before activity shows up -->
     <style name="MyAppTheme.Splash">
@@ -27,12 +31,14 @@
         <item name="android:background">@drawable/rounded_button</item>
         <!-- left margin alignment -->
         <item name="android:layout_marginStart">8dp</item>
-        <!-- left padding -->
+        <!-- padding -->
         <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">8dp</item>
         <!-- align the text as center and left side -->
         <item name="android:gravity">center|left</item>
-        <!-- make the text to appear Big -->
-        <item name="android:textAppearance">?android:attr/textAppearance</item>
+        <!-- make the text to appear Big, change font family -->
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
     <!-- custom style for Button -->

@@ -13,7 +13,7 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
 
 ### Features:
   
-  - For now, it supports only one keyword as input to identify the text, future versions will include more keywords
+  - Now, it supports only multiple keyword as input to identify the text (either in CSV or space seperated format).
   - Triggers notification on when the keyword is matched with received message with vibration, colored notification along with audio playback
   - On receiving notification, ringtone is played at high volume, even if the phone is in silent mode, uses alarm stream at full volume.
   - In some phones, it works in DND mode, as it uses alarm category for notification
@@ -28,6 +28,15 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
     4. Snackbar related bug fixes
     
     
+#### Beta 1.3.0 Changelog:
+  - Support for multiple keywords (CSV or space seperated format)
+  - Added New icons and changed app name 
+  - Bug Fixes
+    1. Notification and Snackbar redesign
+    2. Launch App Permission screen directly from snackbar on user approval
+    3. Edit text and Text View restyling
+
+
 ### Compatibility: 
 
   - Currently expected to work on phones from Android M to Android P.

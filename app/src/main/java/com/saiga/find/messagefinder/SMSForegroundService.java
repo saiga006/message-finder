@@ -141,7 +141,7 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
             String senderAddress = intent.getStringExtra("From");
             String messageContent = intent.getStringExtra("Payload");
             String keyword = intent.getStringExtra("Keyword");
-            Log.d(TAG,messageContent);
+            Log.d(TAG,messageContent + "  keyword " + keyword);
             // prepare the stop intent and pack inside the pending intent and pass it to notification manager
             Intent stopIntent = new Intent(this,SMSForegroundService.class);
             stopIntent.setAction(stopFgService);
@@ -153,8 +153,8 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
             // alarm in DND mode too.
             Notification notification = new NotificationCompat.Builder(this,channelId)
                     .setContentTitle("Priority Message Received!")
-                    .setContentText("Received the text -- "+ keyword +" from "+senderAddress)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setContentText("Received the text "+ keyword +" from "+senderAddress)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .addAction(R.drawable.ic_block_24dp,"STOP",stopPlayback)
                     .setColor(getResources().getColor(R.color.secondaryDarkColor,null))
                     .setColorized(true)
@@ -162,8 +162,9 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
                     .setCategory(NotificationCompat.CATEGORY_ALARM)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .setBigContentTitle("Priority Message Received!")
-                            .setSummaryText("Press STOP to cancel")
-                            .bigText("Received the text "+messageContent+" from "+senderAddress))
+                            .bigText("Received the text "+messageContent+" from "+senderAddress)
+                            .setSummaryText("Press STOP to cancel"))
+                    .setLargeIcon(null)
                     .setSmallIcon(R.drawable.notification_mf_icon)
                     .build();
 
