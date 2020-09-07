@@ -2,6 +2,7 @@ package com.saiga.find.messagefinder;
 
 // required for creating notification
 import android.app.Notification;
+import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
 // user controllable notification channel, required from android O
 import android.app.NotificationChannel;
@@ -154,16 +155,17 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
                     .setContentTitle("Priority Message Received!")
                     .setContentText("Received the text -- "+ keyword +" from "+senderAddress)
                     .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setContentIntent(stopPlayback)
-                    .setColor(getResources().getColor(R.color.somewhat_red,null))
+                    .addAction(R.drawable.ic_block_24dp,"STOP",stopPlayback)
+                    .setColor(getResources().getColor(R.color.secondaryDarkColor,null))
                     .setColorized(true)
+                    .setShowWhen(false)
                     .setCategory(NotificationCompat.CATEGORY_ALARM)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .setBigContentTitle("Priority Message Received!")
-                            .setSummaryText("Touch to dismiss")
+                            .setSummaryText("Press STOP to cancel")
                             .bigText("Received the text "+messageContent+" from "+senderAddress))
                     .setSmallIcon(R.drawable.notification_mf_icon)
-                    .setAutoCancel(true).build();
+                    .build();
 
             // gets the ringtone object from the content provider --  user configured.
              ringTone= RingtoneManager.getRingtone(this,ringUri);

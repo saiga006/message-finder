@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String readStoragePermission = Manifest.permission.READ_EXTERNAL_STORAGE;
     private static final String TAG = "Sms Receiver";
     private static final String ALERT_MSG = "Keyword for alert is empty!";
-    private static final String READ_SMS_NOTIFICATION_MSG = "Please enable the READ SMS permission in App Permissions";
-    private static final String READ_STORAGE_NOTIFICATION_MSG = "Please enable the Read Storage permission in App Permissions";
+    private static final String READ_SMS_NOTIFICATION_MSG = "Enable READ SMS permission in App Permissions";
+    private static final String READ_STORAGE_NOTIFICATION_MSG = "Enable Read Storage permission in App Permissions";
     private static final String SHOW_USER_MSG = "Some permissions needs to be enabled to work properly";
     private String contactStr = null;
     private String messageStr = null;
@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int permRequestCode = 123;
     // launches app settings screen
     private static Handler navigateToSettings = null;
+    private Snackbar smsPermSnackbar = null;
+    private Snackbar storagePermSnackbar = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,9 +197,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // invoked when user has rejected our requested and clicked the permission dialog to
                     // to never show again
                     // need to navigate the user to new settings app
-                    Snackbar.make(mUserMsgLayout, READ_SMS_NOTIFICATION_MSG, Snackbar.LENGTH_SHORT).show();
-                    // launch app permission screen after 3 secs;
-                    navigateToAppPermissions();
+                    smsPermSnackbar =  Snackbar.make(mUserMsgLayout, READ_SMS_NOTIFICATION_MSG, Snackbar.LENGTH_INDEFINITE)
+                            .setAction("SET PERMISSIONS", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    navigateToAppPermissions();
+                                }
+                            })
+                            .setActionTextColor(getColor(R.color.primaryTextColor));;
+                    smsPermSnackbar.show();
                     //Log.d(TAG,"should show rationale");
                     Log.d(TAG, "navigate/suggest user to choose the permission from settings");
                 } else {
@@ -212,9 +220,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // invoked when user has rejected our requested and clicked the permission dialog to
                     // to never show again
                     // need to navigate the user to new settings app
-                    Snackbar.make(mUserMsgLayout, READ_STORAGE_NOTIFICATION_MSG, Snackbar.LENGTH_SHORT).show();
-                    // launch app permission screen after 3 secs;
-                    navigateToAppPermissions();
+                    storagePermSnackbar =  Snackbar.make(mUserMsgLayout, READ_STORAGE_NOTIFICATION_MSG, Snackbar.LENGTH_INDEFINITE)
+                            .setAction("SET PERMISSIONS", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    navigateToAppPermissions();
+                                }
+                            })
+                            .setActionTextColor(getColor(R.color.primaryTextColor));
+                    storagePermSnackbar.show();
                     //Log.d(TAG,"should show rationale");
                     Log.d(TAG, "navigate/suggest user to choose the permission from settings");
                 } else {
@@ -251,8 +265,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void navigateToAppPermissions(){
-        // post in the UI thread after 3 secs, wait till snackbar ends to start new activity in new task with no history in back stack and recents
+        // post in the UI thread after 250 milli secs, wait till snackbar ends to start new activity in new task with no history in back stack and recents
         // when user exits
+        if (smsPermSnackbar!=null){
+            smsPermSnackbar.dismiss();
+            smsPermSnackbar = null;
+        }
+        if (storagePermSnackbar!=null){
+            storagePermSnackbar.dismiss();
+            storagePermSnackbar = null;
+        }
+
         navigateToSettings.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -261,6 +284,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 i.setFlags(FLAG_ACTIVITY_NEW_DOCUMENT|Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
             }
-        },3000);
+        },250);
     }
 }

@@ -46,7 +46,7 @@
     </style>
 
     <!-- snackbar customization material theming -->
-    <style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+    <style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar.FullWidth">
         <item name="android:background">@drawable/snackbar_shape</item>
         <item name="elevation">20dp</item>
     </style>
