@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Message Finder</string>
+    <string name="app_name">Message Notifier</string>
     <string name="enter_the_contact_name">Enter the correct contact number</string>
     <string name="contact_value">Type the Number</string>
     <string name="message_string">Enter the keyword for alert</string>

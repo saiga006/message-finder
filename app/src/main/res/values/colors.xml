@@ -7,7 +7,7 @@
     <color name="secondaryColor">#2979ff</color>
     <color name="secondaryLightColor">#75a7ff</color>
     <color name="secondaryDarkColor">#004ecb</color>
-    <color name="primaryTextColor">#ffffff</color>
+    <color name="primaryTextColor">@color/app_logo_background</color>
     <color name="secondaryTextColor">#000000</color>
-    <color name="app_logo_background">@color/primaryTextColor</color>
+    <color name="app_logo_background">#FFFFFF</color>
 </resources>
