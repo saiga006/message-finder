@@ -3,8 +3,12 @@
     <string name="enter_the_contact_name">Enter the correct contact number</string>
     <string name="contact_value">Type the Number</string>
     <string name="message_string">Enter the keyword for alert</string>
-    <string name="message_hint">Type the Message</string>
+    <string name="message_hint">Type the Keywords</string>
     <string name="trigger_button">Trigger!</string>
     <string name="clear_button">CLEAR</string>
     <string name="logo">app_logo</string>
+
+
+    <string name="dialog_text">Do you want to enable auto suggestion feature ?</string>
+    <string name="helper_text_keyword">Keywords must be in CSV or space separated format</string>
 </resources>

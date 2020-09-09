@@ -14,7 +14,8 @@
 
     <!--permission needed to trigger vibration, on receiving notification -->
     <uses-permission android:name="android.permission.VIBRATE"/>
-
+    <!-- permission needed to receive contacts value from contacts provider for auto suggestions -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <!-- app icon for legacy devices-->
     <!-- app name -->
     <!-- app round_icon  -->

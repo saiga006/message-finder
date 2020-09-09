@@ -2,16 +2,25 @@ package com.saiga.find.messagefinder;
 // for accessing manifest permission strings
 import android.Manifest;
 // for storing the configuration in an app only file
+import android.content.Context;
 import android.content.SharedPreferences;
 // handle to package manager system service
 import android.content.pm.PackageManager;
 // for controlling the shared preference
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 // for handing null and non null annotations based methods
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 // for accessing global state  of the app and system services
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 // framework independent activity class, appears & behaves same across all platform versions
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 //for persisting the state between rotation, other runtime configuration changes
 import android.os.Bundle;
@@ -19,7 +28,9 @@ import android.os.Bundle;
 import android.util.Log;
 // for inflating views, buttons, edittext
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 // for disabling ime temporarily
 import android.view.inputmethod.InputMethodManager;
@@ -32,6 +43,7 @@ import android.support.design.widget.Snackbar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.widget.SimpleCursorAdapter;
 // util functions for processing multiple keywords support
 import java.util.Arrays;
 import java.util.Collections;
@@ -48,22 +60,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String clearStatus = "Cleared!";
     private static final String smsPermission = Manifest.permission.RECEIVE_SMS;
     private static final String readStoragePermission = Manifest.permission.READ_EXTERNAL_STORAGE;
+    private static final String readContactsPermission = Manifest.permission.READ_CONTACTS;
     private static final String TAG = "Sms Receiver";
     private static final String ALERT_MSG = "Keyword for alert is empty!";
     private static final String READ_SMS_NOTIFICATION_MSG = "Enable READ SMS permission in App Permissions";
     private static final String READ_STORAGE_NOTIFICATION_MSG = "Enable Read Storage permission in App Permissions";
     private static final String SHOW_USER_MSG = "Some permissions needs to be enabled to work properly";
+    // to uniquely identify a loader by loader manager
+    private static final int CONTACT_LOADER_ID = 123 ;
+    private static final String READ_CONTACT_NOTIFICATION_MSG = "Enable Contacts permission for Auto Suggestion";
     private String contactStr = null;
     private String messageStr = null;
     private Button trigButton = null;
     private Button clearButton = null;
     private CoordinatorLayout mUserMsgLayout = null;
+    private SimpleCursorAdapter contactAdapter = null;
     // just to handle runtime our runtime permission request
     private static final int permRequestCode = 123;
+    private static final int contactPermRequestCode = 124;
     // launches app settings screen
     private static Handler navigateToSettings = null;
+
+    // snackbar objects for individual permissions
     private Snackbar smsPermSnackbar = null;
     private Snackbar storagePermSnackbar = null;
+
+    // Loader for handling cursor object from Contacts Provider
+    // and updating the contact provider with the cursor
+
+    private LoaderManager.LoaderCallbacks<Cursor> contactsLoader = null;
+
+    // look whether read contacts permission is granted for this app.
+    // serves as a check for auto suggestion popup
+    // currently unused
+    private static boolean shouldShowDropDown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          trigButton = findViewById(R.id.trigger);
         // button for clearing the configuration and stopping the service in background (indirectly)
          clearButton = findViewById(R.id.clear);
-
+         // snackbar co-ordinator layout
          mUserMsgLayout = findViewById(R.id.user_message_layout);
 
          /* deprecated  : intent to trigger for SMS foreground Service
@@ -87,11 +117,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        // serviceIntent.setAction(startAction)
         */
 
+         // Initialise cursor adapter with contact layout and contents to be
+        // fetched from contacts provider
+
+        setupContactAdapter();
+        AutoCompleteTextView contactTextView = (AutoCompleteTextView) findViewById(R.id.contact_value);
+        // Create the loader callback object to query the contacts content provider async using a cursor loader
+        instantiateLoader();
+
+
+        contactAdapter.setCursorToStringConverter(new SimpleCursorAdapter.CursorToStringConverter() {
+            @Override
+            public CharSequence convertToString(Cursor cursor) {
+                String phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                String[] number_parts = phoneNumber.split("[^\\d]+");
+                Log.d(TAG,Arrays.toString(number_parts));
+                StringBuilder formattedNum = new StringBuilder();
+                for (int i=2; i<number_parts.length;i++)
+                {
+                    formattedNum.append(number_parts[i]);
+                }
+                return formattedNum;
+            }
+        });
+
+        // setup the adaptor with the auto complete textview,
+        contactTextView.setAdapter(contactAdapter);
+
+        // ask contact permission before showing suggestions ....
+        // check dont show again is pressed by user in earlier case
+        if (!checkUserConfig()) {
+            if (checkReadContactPermission()){
+                getSupportLoaderManager().initLoader(CONTACT_LOADER_ID,new Bundle(),contactsLoader);
+            }
+
+        }
+
         //set of tasks to do on button click, registering a listener for button click
         clearButton.setOnClickListener(this);
         trigButton.setOnClickListener(this);
 
     }
+
 
     @Override
     protected void onResume() {
@@ -242,6 +309,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
             }
+        } else if (requestCode == contactPermRequestCode) {
+                if ((grantResults.length>0) && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // if read contact permission is approved, initiate the cursor loader callbacks
+                    getSupportLoaderManager().initLoader(CONTACT_LOADER_ID,new Bundle(),contactsLoader);
+
+                } else if ((grantResults.length>0) && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    if (!shouldShowRequestPermissionRationale(readContactsPermission)) {
+                        // invoked when user has rejected our requested and clicked the permission dialog to
+                        // to never show again
+                        // need to navigate the user to new settings app
+                        smsPermSnackbar = Snackbar.make(mUserMsgLayout, READ_CONTACT_NOTIFICATION_MSG, Snackbar.LENGTH_LONG)
+                                .setAction("SET PERMISSIONS", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        navigateToAppPermissions();
+                                    }
+                                })
+                                .setActionTextColor(getColor(R.color.primaryTextColor));
+                        ;
+                        smsPermSnackbar.show();
+                        //Log.d(TAG,"should show rationale");
+                        Log.d(TAG, "navigate/suggest user to choose the permission from settings");
+                    } else {
+                        // show user message via snackbar about the missing permissions
+                        Snackbar.make(mUserMsgLayout, SHOW_USER_MSG, Snackbar.LENGTH_SHORT).show();
+                    }
+                }
         }
     }
 
@@ -299,4 +393,86 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         },250);
     }
+
+    //create a simple cursor adapter to connect the contacts cursor values with our contact layout views
+    private void setupContactAdapter(){
+            String[] uiBindFrom = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
+           int[] uiBindTo = {R.id.contact_title,R.id.contact_number };
+           contactAdapter = new SimpleCursorAdapter(this, R.layout.contacts_view,null,uiBindFrom, uiBindTo,0);
+    }
+
+    private void instantiateLoader(){
+        contactsLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
+            @NonNull
+            @Override
+            public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
+                String[] columnstoRetrieve = new String[] {
+                        ContactsContract.CommonDataKinds.Phone._ID,
+                  ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                  ContactsContract.CommonDataKinds.Phone.NUMBER
+                };
+                CursorLoader contactsCursorLoader = new CursorLoader(MainActivity.this,
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        columnstoRetrieve,
+                        null,null,null);
+                return contactsCursorLoader;
+            }
+
+            @Override
+            public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
+                    contactAdapter.swapCursor(cursor);
+            }
+
+            @Override
+            public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+                    contactAdapter.swapCursor(null);
+            }
+        };
+    }
+
+    private boolean checkReadContactPermission() {
+        // check if the permissions have been granted before
+       boolean mPermGranted = false;
+        if((ContextCompat.checkSelfPermission(getApplicationContext(),readContactsPermission)== PackageManager.PERMISSION_GRANTED)) {
+            mPermGranted = true;
+        }  else {
+            if (!shouldShowDropDown) {
+                // throw a dialog box -- seeking user approval
+                MyDialogFragment userApprovalDialog = new MyDialogFragment();
+                //userApprovalDialog.setStyle(DialogFragment.STYLE_NO_TITLE,R.style.MyAppTheme);
+                userApprovalDialog.show(getSupportFragmentManager(), "AutoSuggestion");
+            }
+
+        }
+        return mPermGranted;
+
+    }
+
+    // this will be invoked on user approval from the dialog window
+    void requestContactPermission(){
+        Log.d(TAG,"Request Permissions is invoked");
+        // throw a system dialog to request permission from user, if permission hasn't been granted before
+        requestPermissions(new String[]{readContactsPermission},contactPermRequestCode);
+    }
+
+
+    //before spamming the user check the shared preference file for existing config
+    private boolean checkUserConfig(){
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("autoSuggDisabled",false);
+    }
+
+    // setting user config of disabling auto suggestion feature
+    void setUserConfig(boolean disabled){
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
+        sharedPrefEditor.putBoolean("Settings",disabled);
+        sharedPrefEditor.apply();
+    }
+
+    // temporarily save this state, so that if user enters by chance ... ????
+    void setPopup(boolean enabled) {
+        shouldShowDropDown = enabled;
+    }
+
 }

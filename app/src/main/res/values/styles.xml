@@ -56,5 +56,12 @@
         <item name="android:background">@drawable/snackbar_shape</item>
         <item name="elevation">20dp</item>
     </style>
+
+    <!-- Dialog customization -->
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@color/app_logo_background</item>
+        <item name="colorAccent">@color/primaryLightColor</item>
+    </style>
+
 </resources>
 
