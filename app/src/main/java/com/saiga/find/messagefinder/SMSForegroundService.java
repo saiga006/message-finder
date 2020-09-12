@@ -2,8 +2,8 @@ package com.saiga.find.messagefinder;
 
 // required for creating notification
 import android.app.Notification;
-import android.graphics.Bitmap;
-import android.support.v4.app.NotificationCompat;
+
+import androidx.core.app.NotificationCompat;
 // user controllable notification channel, required from android O
 import android.app.NotificationChannel;
 // required for posting notification
@@ -141,6 +141,7 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
             String senderAddress = intent.getStringExtra("From");
             String messageContent = intent.getStringExtra("Payload");
             String keyword = intent.getStringExtra("Keyword");
+            String personName = intent.getStringExtra("Person");
             Log.d(TAG,messageContent + "  keyword " + keyword);
             // prepare the stop intent and pack inside the pending intent and pass it to notification manager
             Intent stopIntent = new Intent(this,SMSForegroundService.class);
@@ -153,7 +154,7 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
             // alarm in DND mode too.
             Notification notification = new NotificationCompat.Builder(this,channelId)
                     .setContentTitle("Priority Message Received!")
-                    .setContentText("Received the text "+ keyword +" from "+senderAddress)
+                    .setContentText("Received the text "+ keyword +" from "+ (personName!=null?personName:senderAddress))
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .addAction(R.drawable.ic_block_24dp,"STOP",stopPlayback)
                     .setColor(getResources().getColor(R.color.secondaryDarkColor,null))

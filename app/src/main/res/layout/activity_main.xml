@@ -43,7 +43,9 @@
                 android:layout_weight="1"
                 android:hint="@string/contact_value"
                 android:inputType="phone"
-                android:completionThreshold="5"
+                android:textColor="@color/secondaryDarkColor"
+                android:textColorHint="@color/secondaryColor"
+                android:completionThreshold="1"
                 android:maxLength="10"
                 android:textAppearance="?android:attr/textAppearance"
                 tools:ignore="Autofill" />
@@ -72,12 +74,14 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:textColor="@color/secondaryDarkColor"
+                android:textColorHint="@color/secondaryColor"
                 android:hint="@string/message_hint"
                 android:inputType="textMultiLine"
                 android:textAppearance="?android:attr/textAppearance"
                 tools:ignore="Autofill"/>
 
-            <!--android.support.design.widget.TextInputLayout
+            <!--com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/message_value"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -85,21 +89,25 @@
                 android:layout_marginStart="8dp"
                 app:boxBackgroundMode="outline"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="@string/message_hint"
+                app:hintTextAppearance="?attr/textAppearanceCaption"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusTopStart="8dp"
                 android:layout_marginEnd="4dp"
                 app:counterEnabled="true"
+                app:helperText="@string/helper_text_keyword"
+                app:helperTextTextAppearance="?attr/textAppearanceCaption"
+                app:helperTextEnabled="true"
                 app:counterMaxLength="5"
                 >
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
-                    android:hint="@string/message_hint"
+
                     />
-            </android.support.design.widget.TextInputLayout-->
+            </com.google.android.material.textfield.TextInputLayout-->
 
         </LinearLayout>
 
@@ -131,7 +139,7 @@
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/logo"
             android:src="@drawable/app_logo" />
-        <android.support.design.widget.CoordinatorLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/user_message_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -46,6 +46,7 @@ public class SMSReceiver extends BroadcastReceiver {
         SharedPreferences msgPref=PreferenceManager.getDefaultSharedPreferences(context);
         // if stored value is empty, assigning null
         String number = msgPref.getString("contact",null);
+        String personName = msgPref.getString("contact_name",null);
 
         // we retrieve the keyword/content configured in an app file and convert into lower case
         //for easy comparison
@@ -88,6 +89,7 @@ public class SMSReceiver extends BroadcastReceiver {
                         triggerIntent.putExtra("Keyword",word);
                         // pack also the received full message
                         triggerIntent.putExtra("Payload",messageReceived);
+                        triggerIntent.putExtra("Person",personName);
                         Log.d(TAG, "Found the keyword " + word + " in msg " + msg.getDisplayMessageBody());
                         // inform user about the priority notification
                         // call our service and make it as foreground (visible notifications to user with an alarm)
