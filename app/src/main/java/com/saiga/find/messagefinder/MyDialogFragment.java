@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 
 public class MyDialogFragment extends DialogFragment {
 
@@ -19,10 +21,14 @@ public class MyDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.MyDialogTheme);
+  //      MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireActivity(), R.style.MyDialogTheme);
+
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         // setting the dialog with custom layout
-        builder.setView(inflater.inflate(R.layout.dialog_layout, null))
-                .setPositiveButton("SET", new DialogInterface.OnClickListener() {
+        builder.setView(inflater.inflate(R.layout.dialog_layout, null));
+        //builder.setTitle(R.string.dialog_text);
+        //builder.setMessage(R.string.helper_text_keyword);
+        builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // when user presses SET, call request permissions

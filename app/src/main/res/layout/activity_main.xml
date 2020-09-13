@@ -31,83 +31,93 @@
                 android:id="@+id/contact_name"
                 style="@style/MyTextViewStyle"
                 android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="@string/enter_the_contact_name" />
             <!-- text editor to accept phone number, equal spaced along with text view -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:hint="@string/contact_value"
+                app:hintEnabled="true"
+                app:helperText="Max 10 digits"
+                app:counterEnabled="true"
+                app:counterMaxLength="10"
+                app:endIconMode="dropdown_menu"
+                app:endIconTint="#4A148C"
+                app:hintTextColor="@color/somewhat_red"
+                app:helperTextTextColor="@color/primaryDarkColor"
+                android:textColorHint="@color/secondaryColor"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_weight="1">
             <AutoCompleteTextView
                 android:id="@+id/contact_value"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:hint="@string/contact_value"
                 android:inputType="phone"
-                android:textColor="@color/secondaryDarkColor"
-                android:textColorHint="@color/secondaryColor"
+                android:background="@null"
                 android:completionThreshold="1"
-                android:maxLength="10"
                 android:textAppearance="?android:attr/textAppearance"
                 tools:ignore="Autofill" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
         <LinearLayout
             android:id="@+id/second_text_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_below="@+id/first_text_layout"
-            android:layout_marginTop="24dp"
             android:orientation="horizontal">
+
 
 
             <TextView
                 android:id="@+id/message_string"
                 style="@style/MyTextViewStyle"
+                android:layout_marginTop="16dp"
                 android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:layout_weight="1"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.75"
                 android:text="@string/message_string" />
          <!-- text editor to accept multiline inputs, equal spaced along with with text view -->
-            <EditText
-                android:id="@+id/message_value"
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="8dp"
-                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                app:hintEnabled="true"
+                app:helperText="@string/helper_text_keyword"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                app:endIconMode="clear_text"
+                app:endIconTint="#4A148C"
+                android:hint="@string/message_hint"
                 android:textColor="@color/secondaryDarkColor"
                 android:textColorHint="@color/secondaryColor"
-                android:hint="@string/message_hint"
+                app:hintTextColor="@color/somewhat_red"
+                app:helperTextTextColor="@color/primaryDarkColor"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_weight="1">
+            <EditText
+                android:id="@+id/message_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:inputType="textMultiLine"
                 android:textAppearance="?android:attr/textAppearance"
                 tools:ignore="Autofill"/>
 
-            <!--com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/message_value"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                app:boxBackgroundMode="outline"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="@string/message_hint"
-                app:hintTextAppearance="?attr/textAppearanceCaption"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusBottomEnd="8dp"
-                app:boxCornerRadiusTopStart="8dp"
-                android:layout_marginEnd="4dp"
-                app:counterEnabled="true"
-                app:helperText="@string/helper_text_keyword"
-                app:helperTextTextAppearance="?attr/textAppearanceCaption"
-                app:helperTextEnabled="true"
-                app:counterMaxLength="5"
-                >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    />
-            </com.google.android.material.textfield.TextInputLayout-->
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -118,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/clear"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="64dp"
+            android:layout_marginStart="48dp"
             android:text="@string/trigger_button" />
 
         <Button
@@ -128,7 +138,7 @@
             android:layout_below="@+id/second_text_field"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="48dp"
-            android:layout_marginEnd="64dp"
+            android:layout_marginEnd="48dp"
             android:text="@string/clear_button" />
        <!-- display app logo -->
         <ImageView
