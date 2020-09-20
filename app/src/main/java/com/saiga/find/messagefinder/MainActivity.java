@@ -25,6 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 //for persisting the state between rotation, other runtime configuration changes
 import android.os.Bundle;
 // for printing logs
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 // for transition animation
 import android.transition.Slide;
@@ -51,6 +53,7 @@ import android.widget.SimpleCursorAdapter;
 
 //Snackbar material lib
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 //for launching app settings window to change app permissions
 import android.content.Intent;
 import android.net.Uri;
@@ -148,6 +151,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        // serviceIntent.setAction(startAction)
         */
 
+         // listen to the contact number field and throw error,
+        // if it is wrong, disable trigger button in such cases
+         final TextInputLayout contact_number_layout = findViewById(R.id.contact_input_layout);
+         contact_number_layout.getEditText().addTextChangedListener(new TextWatcher() {
+             @Override
+             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+             }
+
+             @Override
+             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                 if (s.length() > 10 || s.toString().matches("(?!^\\d+$)^.+$")){
+                     contact_number_layout.setError("Doesn't meet the input format/limit !");
+                     contact_number_layout.setErrorIconDrawable(R.drawable.ic_block_24dp);
+                     contact_number_layout.setErrorEnabled(true);
+                     contact_number_layout.setErrorIconOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View v) {
+                             contact_number_layout.getEditText().getText().clear();
+                         }
+                     });
+                     trigButton.setBackgroundColor(getColor(R.color.material_on_background_disabled));
+                     trigButton.setEnabled(false);
+                 } else {
+                     contact_number_layout.setErrorEnabled(false);
+                     contact_number_layout.setHelperTextEnabled(true);
+                     trigButton.setBackgroundResource(R.drawable.rounded_button_gradient);
+                     trigButton.setEnabled(true);
+                 }
+                 Log.d(TAG,"some on change listener : " + start + before + count);
+             }
+
+             @Override
+             public void afterTextChanged(Editable s) {
+
+             }
+         });
+
          // Initialise cursor adapter with contact layout and contents to be
         // fetched from contacts provider
         setupContactAdapter();
@@ -229,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.trigger :{
                 // a app specific file to store the configurations (persists across reboots)
                 EditText contactView = findViewById(R.id.contact_value);
+
                 EditText messageView = findViewById(R.id.message_value);
 
                // clear focus to hide the IME
