@@ -1,7 +1,7 @@
 # message-finder
 An app to trigger **notifications** when receiving **priority messages**(*determined by user keyword*) 
 
-## Beta Release V1.2.0
+## Beta Release V2.0.0
 
 ### How to use:
 
@@ -17,7 +17,28 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   - Triggers notification on when the keyword is matched with received message with vibration, colored notification along with audio playback
   - On receiving notification, ringtone is played at high volume, even if the phone is in silent mode, uses alarm stream at full volume.
   - In some phones, it works in DND mode, as it uses alarm category for notification
+  - OnBoarding Screen for FTI by User
   
+    
+#### Beta 2.0.0 Changelog:
+  - Support for Android 10 
+  - Onboarding Screens for first time users
+  - Error Checking func. for contact input field
+  - App Size reduction by half 28MB to 13MB
+  - Bug Fixes
+    1. Permission Dialog dont ask again option fix
+    2. Bugs related to edit text fields
+
+
+#### Beta 1.3.0 Changelog:
+  - Support for Android 10 
+  - Onboarding Screens for first time users
+  - App Size reduction by half 28MB to 13MB
+  - Bug Fixes
+    1. Permission Dialog dont ask again option fix
+    2. Bugs related to edit text fields
+
+
 #### Beta 1.2.0 Changelog:  
  
   - App permissions can be configured easily with new request permissions design
@@ -27,15 +48,6 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
     3. Fixed the ringtone issue that was occuring in some phones
     4. Snackbar related bug fixes
     
-    
-#### Beta 1.3.0 Changelog:
-  - Support for multiple keywords (CSV or space seperated format)
-  - Added New icons and changed app name 
-  - Bug Fixes
-    1. Notification and Snackbar redesign
-    2. Launch App Permission screen directly from snackbar on user approval
-    3. Edit text and Text View restyling
-
 
 ### Compatibility: 
 
