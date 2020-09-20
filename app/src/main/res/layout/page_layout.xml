@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <!-- displays title of the boarding screen -->
+    <TextView
+        android:id="@+id/title_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:layout_marginTop="104dp"
+        android:layout_marginBottom="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:fontFamily="sans-serif-smallcaps"
+        android:layout_centerHorizontal="true"
+        tools:text="hello"/>
+    <!-- deprecated circular view attempt -->
+    <!--com.google.android.material.circularreveal.cardview.CircularRevealCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/view2"
+        app:cardCornerRadius="90dp"
+        app:cardElevation="12dp"
+        app:cardPreventCornerOverlap="false"
+        android:layout_below="@id/title_textView"
+        android:layout_centerHorizontal="true">
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_image_view"
+        tools:src="@drawable/app_logo"/>
+    </com.google.android.material.circularreveal.cardview.CircularRevealCardView-->
+
+    <!-- external library for circular image view -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/boarding_image"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        tools:src="@drawable/app_logo"
+        android:layout_below="@id/title_textView"
+        android:layout_centerHorizontal="true"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FF000000"/>
+    <!-- summarizes the feature or functionality of the app for first time users -->
+    <TextView
+        android:id="@+id/summaryView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:maxLines="3"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/boarding_image"
+        android:fontFamily="sans-serif"
+        android:layout_centerHorizontal="true"
+        tools:text="@tools:sample/lorem/random"/>
+
+</RelativeLayout>

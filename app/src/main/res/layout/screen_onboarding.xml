@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/onboarding"
+    android:theme="@style/OnboardingTheme"
+    tools:context=".Onboarding">
+
+    <!-- this viewpager connects with our page layout, which loads our textviews and imageviews
+     for onboarding activity-->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/slideView"
+        android:layout_width="match_parent"
+        android:layout_height="673dp"
+        android:layout_above="@+id/navigator_menu"/>
+
+    <Button
+        android:id="@+id/PrevButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/slideView"
+        android:background="@android:color/transparent"
+        android:textColor="@color/primaryTextColor"
+        android:visibility="invisible"
+        android:padding="16dp"
+        android:fontFamily="sans-serif-black"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:text="@string/prev" />
+
+    <Button
+        android:id="@+id/NextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/slideView"
+        android:background="@android:color/transparent"
+        android:textColor="@color/lightOrangeColor"
+        android:padding="16dp"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/next"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"/>
+
+
+    <LinearLayout
+        android:id="@+id/navigator_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:minHeight="64dp"
+        android:layout_alignParentBottom="true">
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

@@ -11,4 +11,17 @@
 
     <string name="dialog_text">Do you want to enable auto suggestion feature ?</string>
     <string name="helper_text_keyword">Keywords must be in CSV or space separated format</string>
+
+    <string name="OnboardingTitle1">"ENTER KEYWORDS"</string>
+    <string name="OnboardingTitle2">"PRIORITY ALERTS"</string>
+    <string name="OnboardingTitle3">"PRIVACY"</string>
+
+    <string name="OnboardingDesc1">"Supports multiple keywords scanning through the SMS.\nServes as an SOS app"</string>
+    <string name="OnboardingDesc2">"Enables Priority Notification even in silent mode.\nTriggers Notification when the user configured keyword is received"</string>
+    <string name="OnboardingDesc3">"We follow all the android best practices to protect your privacy.We never collect data.\nDesigned inline with android permission guidelines"</string>
+    <string name="prev">Back</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+
+
 </resources>

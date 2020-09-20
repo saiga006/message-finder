@@ -2,6 +2,7 @@ package com.saiga.find.messagefinder;
 // for accessing manifest permission strings
 import android.Manifest;
 // for storing the configuration in an app only file
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 // handle to package manager system service
@@ -25,11 +26,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 // for printing logs
 import android.util.Log;
+// for transition animation
+import android.transition.Slide;
+import android.view.Gravity;
+import android.view.animation.DecelerateInterpolator;
 // for inflating views, buttons, edittext
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.EditText;
 // for disabling ime temporarily
 import android.view.inputmethod.InputMethodManager;
@@ -37,14 +41,20 @@ import android.view.inputmethod.InputMethodManager;
 //import android.widget.Toast;
 // for Snackbar message support
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+//import androidx.viewpager.widget.PagerAdapter;
+
+//for cursor adapter and auto suggestion feature
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.FilterQueryProvider;
+import android.widget.SimpleCursorAdapter;
+
+//Snackbar material lib
 import com.google.android.material.snackbar.Snackbar;
 //for launching app settings window to change app permissions
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
-import android.widget.FilterQueryProvider;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 // util functions for processing multiple keywords support
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String READ_STORAGE_NOTIFICATION_MSG = "Enable Read Storage permission in App Permissions";
     private static final String SHOW_USER_MSG = "Some permissions needs to be enabled to work properly";
     // to uniquely identify a loader by loader manager
-    private static final int CONTACT_LOADER_ID = 123 ;
+    //private static final int CONTACT_LOADER_ID = 123 ;
     private static final String READ_CONTACT_NOTIFICATION_MSG = "Enable Contacts permission for Auto Suggestion";
     private String contactStr = null;
     private String messageStr = null;
@@ -89,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // Loader for handling cursor object from Contacts Provider
     // and updating the contact provider with the cursor
 
-    private LoaderManager.LoaderCallbacks<Cursor> contactsLoader = null;
+    //private LoaderManager.LoaderCallbacks<Cursor> contactsLoader = null;
     private static SharedPreferences config = null;
 
     // look whether read contacts permission is granted for this app.
@@ -97,11 +107,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // currently unused
     private static boolean shouldShowDropDown = false;
 
+    // flag to mark onboard activity start and completion states
+    private static boolean showOnboarding = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // structure which controls, the flow of onboarding activity and the normal activity
+        int enabled = getPackageManager().getComponentEnabledSetting(new ComponentName(this,Onboarding.class));
+        Log.d(TAG,"enabled status" + enabled);
+        if ((enabled == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) || (enabled == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT)){
+            Log.d(TAG,"started ?");
+            showOnboarding = true;
+            // start onboard activity if it is the first time user installation
+            startActivity(new Intent(this,Onboarding.class));
+            this.finish();
+        } else {
+            showOnboarding = false;
+        }
+
         // clear the splash, and set the normal app window
         setTheme(R.style.MyAppTheme);
         super.onCreate(savedInstanceState);
+        // performs one time animation when entering this activity from onboarding screen
+        slideAnimation();
         // inflates the contents from activity_main.xml
         setContentView(R.layout.activity_main);
         // get the handler and attach it to UI looper thread
@@ -122,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
          // Initialise cursor adapter with contact layout and contents to be
         // fetched from contacts provider
-
         setupContactAdapter();
         final AutoCompleteTextView contactTextView = (AutoCompleteTextView) findViewById(R.id.contact_value);
         // Create the loader callback object to query the contacts content provider async using a cursor loader
@@ -131,10 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         contactTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Cursor value = (Cursor) parent.getAdapter().getItem(position);
-//                int phone_column = value.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-//                String phoneContact = value.getString(phone_column);
-//
+                // capture the contact name from the selected user account and display it in the notification
                 TextView contactTitle = (TextView) view.findViewById(R.id.contact_title);
                 SharedPreferences.Editor configEditor = config.edit();
                 configEditor.putString("contact_name", contactTitle.getText().toString());
@@ -142,14 +166,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG,"selected phone contact" + contactTitle.getText() );
             }
         });
-
+        // passes the text on field selection by the cursor
         contactAdapter.setCursorToStringConverter(new SimpleCursorAdapter.CursorToStringConverter() {
             @Override
             public CharSequence convertToString(Cursor cursor) {
                 String phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 Log.d(TAG, "before splitting numbers : " + phoneNumber);
                 if (phoneNumber.length()>10){
-
+                // parses the number if it has any characters or whitespaces and splits and merges accordingly
                 String[] number_parts = phoneNumber.split("[^\\d]+");
                 Log.d(TAG, "splitted nums: "+ Arrays.toString(number_parts));
                 StringBuilder formattedNum = new StringBuilder();
@@ -180,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
         }
-
         //set of tasks to do on button click, registering a listener for button click
         clearButton.setOnClickListener(this);
         trigButton.setOnClickListener(this);
@@ -340,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if ((grantResults.length>0) && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     // if read contact permission is approved, initiate the cursor loader callbacks
                     //getSupportLoaderManager().initLoader(CONTACT_LOADER_ID,new Bundle(),contactsLoader);
-                    // instead use filter queryprovider
+                    // instead we use filter queryprovider
                     setFilter();
                 } else if ((grantResults.length>0) && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     if (!shouldShowRequestPermissionRationale(readContactsPermission)) {
@@ -387,6 +410,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         clearButton.setText(R.string.clear_button);
     }
 
+    // one time slide animation between onboarding activity and main activity,
+    // elements fly in from the end
+    private void slideAnimation()
+    {
+        Slide slide = new Slide();
+        slide.setSlideEdge(Gravity.END);
+        slide.setDuration(400);
+        slide.setInterpolator(new DecelerateInterpolator());
+        getWindow().setEnterTransition(slide);
+        getWindow().setExitTransition(slide);
+    }
+
     private void clearSoftKeyboardState (){
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         assert inputMethodManager != null;
@@ -410,6 +445,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             storagePermSnackbar = null;
         }
 
+        // navigates the user to settings page, if he presses the dont ask again option
+        // in system permission dialog
         navigateToSettings.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -428,35 +465,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            contactAdapter = new SimpleCursorAdapter(this, R.layout.contacts_view,null,uiBindFrom, uiBindTo,0);
     }
 
-    private void instantiateLoader(){
-        contactsLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
-            @NonNull
-            @Override
-            public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
-                String[] columnstoRetrieve = new String[] {
-                        ContactsContract.CommonDataKinds.Phone._ID,
-                  ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                  ContactsContract.CommonDataKinds.Phone.NUMBER
-                };
-
-                CursorLoader contactsCursorLoader = new CursorLoader(MainActivity.this,
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        columnstoRetrieve,
-                        null,null,null);
-                return contactsCursorLoader;
-            }
-
-            @Override
-            public void onLoadFinished(@NonNull Loader<Cursor> loader, final Cursor cursor) {
-                    contactAdapter.swapCursor(cursor);
-            }
-
-            @Override
-            public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-                    contactAdapter.swapCursor(null);
-            }
-        };
-    }
+    //@deprecated -- not applicable for the present use case
+//    private void instantiateLoader(){
+//        contactsLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
+//            @NonNull
+//            @Override
+//            public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
+//                String[] columnstoRetrieve = new String[] {
+//                        ContactsContract.CommonDataKinds.Phone._ID,
+//                  ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+//                  ContactsContract.CommonDataKinds.Phone.NUMBER
+//                };
+//
+//                CursorLoader contactsCursorLoader = new CursorLoader(MainActivity.this,
+//                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+//                        columnstoRetrieve,
+//                        null,null,null);
+//                return contactsCursorLoader;
+//            }
+//
+//            @Override
+//            public void onLoadFinished(@NonNull Loader<Cursor> loader, final Cursor cursor) {
+//                    contactAdapter.swapCursor(cursor);
+//            }
+//
+//            @Override
+//            public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+//                    contactAdapter.swapCursor(null);
+//            }
+//        };
+//    }
 
     private boolean checkReadContactPermission() {
         // check if the permissions have been granted before
@@ -464,12 +502,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if((ContextCompat.checkSelfPermission(getApplicationContext(),readContactsPermission)== PackageManager.PERMISSION_GRANTED)) {
             mPermGranted = true;
         }  else {
-            if (!shouldShowDropDown) {
-                // throw a dialog box -- seeking user approval
-                MyDialogFragment userApprovalDialog = new MyDialogFragment();
-                //userApprovalDialog.setStyle(DialogFragment.STYLE_NO_TITLE,R.style.MyAppTheme);
-                userApprovalDialog.show(getSupportFragmentManager(), "AutoSuggestion");
-            }
+            // we defer the dialog message by two seconds, so that it appears natural to user.
+            // this offloads the oncreate execution time.
+            if (!shouldShowDropDown && !showOnboarding) {
+                Handler delayShowingDialog = new Handler(getMainLooper());
+                delayShowingDialog.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // throw a dialog box -- seeking user approval
+                        MyDialogFragment userApprovalDialog = new MyDialogFragment();
+                        //userApprovalDialog.setStyle(DialogFragment.STYLE_NO_TITLE,R.style.MyAppTheme);
+                        userApprovalDialog.show(getSupportFragmentManager(), "AutoSuggestion");
+
+                    }
+                },2000);
+
+              }
 
         }
         return mPermGranted;
@@ -494,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     void setUserConfig(boolean disabled){
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
-        sharedPrefEditor.putBoolean("Settings",disabled);
+        sharedPrefEditor.putBoolean("autoSuggDisabled",disabled);
         sharedPrefEditor.apply();
     }
 
@@ -503,6 +551,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         shouldShowDropDown = enabled;
     }
 
+    // attach the filter to our adapter, to filter out the dropdown results
     private void setFilter(){
         contactAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
@@ -514,6 +563,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.d(TAG, "Filter query is empty "+ constraint);
                     return null;
                 }
+                // checks whether the user inputted number pattern matches "*1245*" in the database
+                // and dynamically updates the dropdown list and updates the view as user types
                 String[] projection = {ContactsContract.CommonDataKinds.Phone._ID,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
                 String toBeQueried = ContactsContract.CommonDataKinds.Phone.NUMBER + " LIKE ?";
                 String[] selectionArgs = {"%"+constraint.toString()+"%"};

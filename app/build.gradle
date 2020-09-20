@@ -16,11 +16,11 @@ android {
     buildTypes {
         debug {
             // enabling minify to shrink the resources and remove unused files in the build
-          //  minifyEnabled true
+            //  minifyEnabled true
         }
         release {
             //minifyEnabled true
-          //  proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //  proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -30,6 +30,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0-alpha02'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

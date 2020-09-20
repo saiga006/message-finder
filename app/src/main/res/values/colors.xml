@@ -10,4 +10,11 @@
     <color name="primaryTextColor">@color/app_logo_background</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="app_logo_background">#FFFFFF</color>
+    <!-- onboarding colors -->
+    <color name="lightBlueColor">#25B4FA</color>
+    <color name="lightOrangeColor">#FFA000</color>
+    <color name="lightBlackColor">#161A39</color>
+    <color name="lightGreyColor">#4DB0BADD</color>
+    <color name="lightPinkColor">#F36796</color>
+    <color name="lightGreenColor">#CCFF90</color>
 </resources>

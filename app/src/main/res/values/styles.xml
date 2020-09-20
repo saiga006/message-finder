@@ -39,6 +39,7 @@
         <!-- make the text to appear Big, change font family -->
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <!-- custom style for Button -->
@@ -62,6 +63,15 @@
         <item name="android:windowBackground">@color/app_logo_background</item>
         <item name="colorAccent">@color/primaryLightColor</item>
     </style>
+
+    <style name="OnboardingTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimary">@color/somewhat_red</item>
+        <item name="colorPrimaryDark">#680000</item>
+        <item name="colorAccent">@color/lightPinkColor</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:colorControlHighlight">@color/lightGreenColor</item>
+    </style>
+
 
 
 
