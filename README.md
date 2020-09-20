@@ -51,7 +51,7 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
 
 ### Compatibility: 
 
-  - Currently expected to work on phones from Android M to Android P.
+  - Currently expected to work on phones from Android M to Android Q.
 
 ### Code Verbosity Level: 
 
@@ -93,5 +93,8 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   - Integration [Material Design](https://github.com/material-components/material-components-android/blob/master/docs/getting-started.md)
     and customizing [Snackbar](https://material.io/develop/android/components/snackbars)
   - App Signing [Tutorial](https://youtu.be/akDXw9n3gFY)
+  - Proguard and Apk Size Reduction [Writeup](https://medium.com/androiddevelopers/practical-proguard-rules-examples-5640a3907dc9)
+  - Add Onboarding Screen [Tutorial](https://www.youtube.com/watch?v=byLKoPgB7yA)
+  - Add Circular ImageView [Library](https://github.com/hdodenhof/CircleImageView)
   - Obviously StackOverflow for issues during development and bug fixing :-)
   
