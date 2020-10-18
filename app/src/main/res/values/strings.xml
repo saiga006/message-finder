@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Message Notifier</string>
+    <string name="app_name">Priority Alerts</string>
     <string name="enter_the_contact_name">Enter the correct contact number</string>
     <string name="contact_value">Type the Number</string>
     <string name="message_string">Enter the keyword for alert</string>
@@ -9,8 +9,8 @@
     <string name="logo">app_logo</string>
 
 
-    <string name="dialog_text">Do you want to enable auto suggestion feature ?</string>
-    <string name="helper_text_keyword">Keywords must be in CSV or space separated format</string>
+    <string name="dialog_text">Do you want to enable auto suggestion feature for contact number ?</string>
+    <string name="helper_text_keyword">Keywords must be in comma or space separated format</string>
 
     <string name="OnboardingTitle1">"ENTER KEYWORDS"</string>
     <string name="OnboardingTitle2">"PRIORITY ALERTS"</string>

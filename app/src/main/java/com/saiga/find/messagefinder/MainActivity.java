@@ -4,6 +4,7 @@ import android.Manifest;
 // for storing the configuration in an app only file
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 // handle to package manager system service
 import android.content.pm.PackageManager;
@@ -83,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // to uniquely identify a loader by loader manager
     //private static final int CONTACT_LOADER_ID = 123 ;
     private static final String READ_CONTACT_NOTIFICATION_MSG = "Enable Contacts permission for Auto Suggestion";
+    // to uniquely identify our request to contact picker app
+    private static final int RESULT_PICK_CONTACT = 125 ;
     private String contactStr = null;
     private String messageStr = null;
     private Button trigButton = null;
@@ -108,21 +111,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // look whether read contacts permission is granted for this app.
     // serves as a check for auto suggestion popup
     // currently unused
-    private static boolean shouldShowDropDown = false;
+    private static boolean isRequestDiagDisabled = false;
 
     // flag to mark onboard activity start and completion states
     private static boolean showOnboarding = false;
+    private boolean isContactPicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // structure which controls, the flow of onboarding activity and the normal activity
-        int enabled = getPackageManager().getComponentEnabledSetting(new ComponentName(this,Onboarding.class));
-        Log.d(TAG,"enabled status" + enabled);
-        if ((enabled == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) || (enabled == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT)){
-            Log.d(TAG,"started ?");
+        int enabled = getPackageManager().getComponentEnabledSetting(new ComponentName(this, Onboarding.class));
+        Log.d(TAG, "enabled status" + enabled);
+        if ((enabled == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) || (enabled == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT)) {
+            Log.d(TAG, "started ?");
             showOnboarding = true;
             // start onboard activity if it is the first time user installation
-            startActivity(new Intent(this,Onboarding.class));
+            startActivity(new Intent(this, Onboarding.class));
             this.finish();
         } else {
             showOnboarding = false;
@@ -139,11 +143,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         navigateToSettings = new Handler(getMainLooper());
 
         // button for saving the configuration and triggering the service in background (indirectly)
-         trigButton = findViewById(R.id.trigger);
+        trigButton = findViewById(R.id.trigger);
         // button for clearing the configuration and stopping the service in background (indirectly)
-         clearButton = findViewById(R.id.clear);
-         // snackbar co-ordinator layout
-         mUserMsgLayout = findViewById(R.id.user_message_layout);
+        clearButton = findViewById(R.id.clear);
+        // snackbar co-ordinator layout
+        mUserMsgLayout = findViewById(R.id.user_message_layout);
         // get the global shared preference file for this app
         config = PreferenceManager.getDefaultSharedPreferences(this);
          /* deprecated  : intent to trigger for SMS foreground Service
@@ -151,84 +155,108 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        // serviceIntent.setAction(startAction)
         */
 
-         // listen to the contact number field and throw error,
+        // listen to the contact number field and throw error,
         // if it is wrong, disable trigger button in such cases
-         final TextInputLayout contact_number_layout = findViewById(R.id.contact_input_layout);
-         contact_number_layout.getEditText().addTextChangedListener(new TextWatcher() {
-             @Override
-             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        final TextInputLayout contact_number_layout = findViewById(R.id.contact_input_layout);
+        contact_number_layout.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-             }
+            }
 
-             @Override
-             public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // if the contact number field has more numbers or if it has any other character
+                // other than number, then throw error in UI and set helper text for user
+                if (s.length() > 10 || s.toString().matches("(?!^\\d+$)^.+$")) {
+                    contact_number_layout.setError("Doesn't meet the input format/limit !");
+                    contact_number_layout.setErrorIconDrawable(R.drawable.ic_block_24dp);
+                    contact_number_layout.setErrorEnabled(true);
+                    contact_number_layout.setErrorIconOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            contact_number_layout.getEditText().getText().clear();
+                        }
+                    });
+                    trigButton.setBackgroundColor(getColor(R.color.material_on_background_disabled));
+                    trigButton.setEnabled(false);
+                } else {
+                    contact_number_layout.setErrorEnabled(false);
+                    contact_number_layout.setHelperTextEnabled(true);
+                    trigButton.setBackgroundResource(R.drawable.rounded_button_gradient);
+                    trigButton.setEnabled(true);
+                }
+                Log.d(TAG, "some on change listener : " + start + before + count);
+            }
 
-                 if (s.length() > 10 || s.toString().matches("(?!^\\d+$)^.+$")){
-                     contact_number_layout.setError("Doesn't meet the input format/limit !");
-                     contact_number_layout.setErrorIconDrawable(R.drawable.ic_block_24dp);
-                     contact_number_layout.setErrorEnabled(true);
-                     contact_number_layout.setErrorIconOnClickListener(new View.OnClickListener() {
-                         @Override
-                         public void onClick(View v) {
-                             contact_number_layout.getEditText().getText().clear();
-                         }
-                     });
-                     trigButton.setBackgroundColor(getColor(R.color.material_on_background_disabled));
-                     trigButton.setEnabled(false);
-                 } else {
-                     contact_number_layout.setErrorEnabled(false);
-                     contact_number_layout.setHelperTextEnabled(true);
-                     trigButton.setBackgroundResource(R.drawable.rounded_button_gradient);
-                     trigButton.setEnabled(true);
-                 }
-                 Log.d(TAG,"some on change listener : " + start + before + count);
-             }
+            @Override
+            public void afterTextChanged(Editable s) {
 
-             @Override
-             public void afterTextChanged(Editable s) {
+            }
+        });
 
-             }
-         });
-
-         // Initialise cursor adapter with contact layout and contents to be
+        // Initialise cursor adapter with contact layout and contents to be
         // fetched from contacts provider
         setupContactAdapter();
         final AutoCompleteTextView contactTextView = (AutoCompleteTextView) findViewById(R.id.contact_value);
         // Create the loader callback object to query the contacts content provider async using a cursor loader
         // cursor loader and filter query provider doesn't work with each other very well, so better drop using loader
         //instantiateLoader();
+
+        // we use on focus change listener for the edit text to determine, whether to throw our contact picker
+        // dialog based on bunch of state variables
+        // this is determined based on whether user has disabled the auto suggestion feature, or skipped
+        // the auto suggestion feature or if user had successfully picked a contact using our contact picker earlier
+        contactTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean focusGain) {
+                Log.d(TAG, "inside on focus change, is focus gained ? " + focusGain + " isrequestdialogEnabled ?" + isRequestDiagDisabled);
+                // we use contact picker only in scenario's where auto suggestion is disabled, or skipped or if we haven't picked any contact earlier
+                if (focusGain && (isRequestDiagDisabled || checkUserConfig()) && !isContactPicked) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogTheme);
+                    builder.setTitle("Contact Picker");
+                    builder.setIcon(R.drawable.ic_contact_phone_black_24dp);
+                    builder.setMessage("Do you want to pick the contacts ?");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // we use contacts provider uri as intent parameter, it will point us to the contacts app
+                            Intent contactPicker = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                            startActivityForResult(contactPicker, RESULT_PICK_CONTACT);
+                            Log.d(TAG, "start the contact picker activity");
+                        }
+                    });
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // we mark the user choice, to determine the state of this dialog popup again
+                            // when the user goes back to the contact number edit text
+                            isContactPicked = false;
+                            Log.d(TAG, "dont start the contact picker activity");
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+        });
+
+
         contactTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // capture the contact name from the selected user account and display it in the notification
                 TextView contactTitle = (TextView) view.findViewById(R.id.contact_title);
-                SharedPreferences.Editor configEditor = config.edit();
-                configEditor.putString("contact_name", contactTitle.getText().toString());
-                configEditor.apply();
+                insertContactName(contactTitle.getText().toString());
                 Log.d(TAG,"selected phone contact" + contactTitle.getText() );
             }
         });
-        // passes the text on field selection by the cursor
+        // passes the text, on field selection by the cursor
         contactAdapter.setCursorToStringConverter(new SimpleCursorAdapter.CursorToStringConverter() {
             @Override
             public CharSequence convertToString(Cursor cursor) {
                 String phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                Log.d(TAG, "before splitting numbers : " + phoneNumber);
-                if (phoneNumber.length()>10){
-                // parses the number if it has any characters or whitespaces and splits and merges accordingly
-                String[] number_parts = phoneNumber.split("[^\\d]+");
-                Log.d(TAG, "splitted nums: "+ Arrays.toString(number_parts));
-                StringBuilder formattedNum = new StringBuilder();
-                    for (String number_part : number_parts) {
-                        formattedNum.append(number_part);
-                    }
-                    // if the number is greater than 10 remove the country code prefix
-                    int formattedLength = formattedNum.length();
-                return formattedLength>10?formattedNum.substring(formattedLength-10):formattedNum;
-                } else {
-                    return phoneNumber;
-                }
-
+                return spliceNumber(phoneNumber);
             }
         });
 
@@ -252,6 +280,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // retrieves the content provider from the picked contact by the user, and then
+    // query for the user selected contact number and contact name.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case RESULT_PICK_CONTACT:
+                    Cursor cursor = null;
+                    String phoneNumber = null;
+                    String contactName = null;
+                    try {
+                        Uri pickedItem = data.getData();
+                        cursor = getContentResolver().query(pickedItem,null,null,null,null);
+                        cursor.moveToFirst();
+                        // fetch the contact name and phone number and update in shared preference
+                        //and  in the edit text field automatically
+                        contactName = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                        phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        EditText contact = findViewById(R.id.contact_value);
+                        // removes country code and unwanted spaces between numbers if it exists
+                        contact.setText(spliceNumber(phoneNumber));
+                        //adds the contact name to shared preferences to display it in UI
+                        insertContactName(contactName);
+                        // this is a state variable to manage the dialog popup of "Do you want to pick the contacts"
+                        // set this as true, when user has selected the a contact successfully
+                        // this will determine whether to throw the dialog, when the user returns to our app
+                        isContactPicked = true;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Log.d(TAG,"Result of picked contact");
+                    break;
+            }
+        }
+    }
+
+    // inserts name into global shared preference file
+    void insertContactName(String contactTitle) {
+        SharedPreferences.Editor configEditor = config.edit();
+        configEditor.putString("contact_name", contactTitle);
+        configEditor.apply();
+    }
 
     @Override
     protected void onResume() {
@@ -290,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 // Don't save the config if the runtime permission is not granted by user
                 if (!checkSmsPermission()){
-
+                    // do an early return
                     //@deprecated Toast.makeText(this,USER_NOTIFICATION_MSG,Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -545,9 +616,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if((ContextCompat.checkSelfPermission(getApplicationContext(),readContactsPermission)== PackageManager.PERMISSION_GRANTED)) {
             mPermGranted = true;
         }  else {
-            // we defer the dialog message by two seconds, so that it appears natural to user.
+            // we defer the dialog message approx. by two seconds, so that it appears natural to user.
             // this offloads the oncreate execution time.
-            if (!shouldShowDropDown && !showOnboarding) {
+            if (!isRequestDiagDisabled && !showOnboarding) {
                 Handler delayShowingDialog = new Handler(getMainLooper());
                 delayShowingDialog.postDelayed(new Runnable() {
                     @Override
@@ -558,10 +629,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         userApprovalDialog.show(getSupportFragmentManager(), "AutoSuggestion");
 
                     }
-                },2000);
+                },1500);
 
               }
-
         }
         return mPermGranted;
 
@@ -589,9 +659,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sharedPrefEditor.apply();
     }
 
-    // temporarily save this state, so that if user enters by chance ... ????
-    void setPopup(boolean enabled) {
-        shouldShowDropDown = enabled;
+    // temporarily save this state, so that this will be used to determine contact picker behavior,
+    // which will be enabled when auto suggestion feature is disabled or skipped
+    public void setPopup(boolean disabled) {
+        isRequestDiagDisabled = disabled;
+    }
+
+    // makes phone number to 10 digits, removes unwanted spaces and country code
+    // used for post processing after picking the number from contacts app/ contacts provider
+    private String spliceNumber(String phoneNumber){
+        Log.d(TAG, "before splitting numbers : " + phoneNumber);
+        if (phoneNumber.length()>10){
+            // parses the number if it has any characters or whitespaces and splits and merges accordingly
+            String[] number_parts = phoneNumber.split("[^\\d]+");
+            Log.d(TAG, "splitted nums: "+ Arrays.toString(number_parts));
+            StringBuilder formattedNum = new StringBuilder();
+            for (String number_part : number_parts) {
+                formattedNum.append(number_part);
+            }
+            // if the number is greater than 10 remove the country code prefix
+            int formattedLength = formattedNum.length();
+            return (formattedLength>10)?formattedNum.substring(formattedLength-10): formattedNum.toString();
+        } else {
+            return phoneNumber;
+        }
     }
 
     // attach the filter to our adapter, to filter out the dropdown results

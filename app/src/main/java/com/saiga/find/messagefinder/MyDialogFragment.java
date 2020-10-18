@@ -40,8 +40,10 @@ public class MyDialogFragment extends DialogFragment {
                 .setNegativeButton("DISMISS", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // When user presses dismiss, call cancel()
-                        dialog.cancel();
+                        // When user presses dismiss,
+                        // call this so that, when user comes back to the app, the permission dialog doesn't appear again
+                        ((MainActivity)MyDialogFragment.this.requireActivity()).setPopup(true);
+
                     }
                 })
                 .setNeutralButton("Dont Show Again", new DialogInterface.OnClickListener() {
