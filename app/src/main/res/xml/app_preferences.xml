@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings_button">
+
+    <!-- preference category for experimental features -->
+    <PreferenceCategory android:title="@string/app_pref_category1" android:key="@string/app_category_key1">
+        <SwitchPreference android:title="@string/auto_suggestion_feature"
+            android:defaultValue="false"
+            android:key="@string/auto_suggestion_key"
+            android:summaryOff="@string/auto_suggestion_off"
+            android:summaryOn="@string/auto_suggestion_on"/>
+    </PreferenceCategory>
+    <!-- preference category for user saved preferences -->
+    <PreferenceCategory android:title="@string/app_pref_category2" android:key="@string/app_category_key2">
+        <Preference android:title="@string/sms_config"
+            android:key="@string/sms_config_key"
+            android:enabled="false"
+            android:shouldDisableView="false"
+            android:summary="%s"/>
+
+        <Preference android:title="@string/app_version"
+            android:key="@string/app_version_key"
+            android:enabled="false"
+            android:shouldDisableView="false"
+            android:summary="@string/current_app_version"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

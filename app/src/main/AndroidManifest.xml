@@ -22,7 +22,13 @@
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme.Splash">
-        <activity android:name=".Onboarding" android:enabled="true">
+        <activity android:name=".SettingsActivity"
+            android:theme="@style/AppSettingsTheme">
+
+        </activity>
+        <activity
+            android:name=".Onboarding"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />

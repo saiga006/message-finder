@@ -19,6 +19,12 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   - In some phones, it works in DND mode, as it uses alarm category for notification
   - OnBoarding Screen for FTI by User
   
+##### Beta 2.5.0 Changelog:
+  - Added support for app settings screen, user can now see their saved config after reboots and closing the app too.
+  - Displays saved app configurations, app versions and added auto suggestion as an experimental feature
+  - More preference is given to contact picker as it is less error prone and doesn't require read contacts permission
+    from the user like the auto suggestion feature
+
 #### Beta 2.1.0 Changelog:
   - Added support for contact picker feature, now user can pick their contacts directly from contact app, instead of typing manually
   - Refactored and redefined permission dialog flow for auto suggestion feature

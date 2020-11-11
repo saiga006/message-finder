@@ -8,6 +8,23 @@
     <string name="clear_button">CLEAR</string>
     <string name="logo">app_logo</string>
 
+    <string name="settings_button">App Settings</string>
+    <string name="app_pref_category1">Features</string>
+    <string name="app_category_key1">features_key</string>
+    <string name="app_pref_category2">App Configurations</string>
+    <string name="app_category_key2">configuration_key</string>
+
+    <string name="sms_config">Active SMS Configuration</string>
+    <string name="sms_config_key">notification_key</string>
+
+    <string name="app_version">App Version</string>
+    <string name="app_version_key">app_version_key</string>
+    <string name="current_app_version">2.5.0</string>
+
+    <string name="auto_suggestion_feature">Auto Suggestion</string>
+    <string name="auto_suggestion_key">autosuggestion_key</string>
+    <string name="auto_suggestion_on">Currently Enabled, restart the app for the feature</string>
+    <string name="auto_suggestion_off">Auto Suggestion is currently disabled, to enable it contact permission is needed</string>
 
     <string name="dialog_text">Do you want to enable auto suggestion feature for contact number ?</string>
     <string name="helper_text_keyword">Keywords must be in comma or space separated format</string>

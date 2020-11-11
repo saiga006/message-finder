@@ -32,6 +32,8 @@ import android.util.Log;
 // for transition animation
 import android.transition.Slide;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.animation.DecelerateInterpolator;
 // for inflating views, buttons, edittext
 import android.view.View;
@@ -280,6 +282,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // called after Oncreate to inflate the settings menu item in app action bar
+     @Override
+     public boolean onCreateOptionsMenu(Menu menu) {
+     getMenuInflater().inflate(R.menu.settings_menu,menu);
+        return true;
+    }
+
+    // callback invoked when the settings menu is clicked by user
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.settings_menu) {
+            // Add link to our settings activity to display preferences such as app version,
+            // stored configuration and to enable contact suggestion feature
+            Intent settingsIntent = new Intent(this,SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     // retrieves the content provider from the picked contact by the user, and then
     // query for the user selected contact number and contact name.
     @Override
@@ -329,6 +351,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // makes the root layout gets the focus, before it is passed to edit text
         // to prevent the ime to open automatically in landscape mode when device
         // is rotated.
+        Log.d(TAG,"Inside on Resume Callback");
         findViewById(R.id.ui_layout).requestFocus();
         super.onResume();
     }

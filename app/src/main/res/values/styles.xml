@@ -64,6 +64,7 @@
         <item name="colorAccent">@color/primaryLightColor</item>
     </style>
 
+    <!-- Theme used primarily for FTI setup / Onboarding screen -->
     <style name="OnboardingTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorPrimary">@color/somewhat_red</item>
         <item name="colorPrimaryDark">#680000</item>
@@ -72,9 +73,11 @@
         <item name="android:colorControlHighlight">@color/lightGreenColor</item>
     </style>
 
-
-
-
+    <!-- material themed preferences for settings screen -->
+    <style name="AppSettingsTheme" parent="MyAppTheme">
+        <item name="colorAccent">@color/secondaryDarkColor</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>
 
 </resources>
 
