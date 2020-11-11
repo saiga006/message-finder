@@ -62,7 +62,7 @@
                 android:layout_weight="1"
                 android:inputType="phone"
                 android:background="@null"
-                android:completionThreshold="1"
+                android:completionThreshold="3"
                 android:textAppearance="?android:attr/textAppearance"
                 tools:ignore="Autofill" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -109,7 +109,7 @@
                 app:helperTextTextColor="@color/primaryDarkColor"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_weight="1">
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/message_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -150,6 +150,7 @@
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/logo"
             android:src="@drawable/app_logo" />
+        <!-- used as anchor for snackbar appearance in scrolled layout -->
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/user_message_layout"
             android:layout_width="match_parent"

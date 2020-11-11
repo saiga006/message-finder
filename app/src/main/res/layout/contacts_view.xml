@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:divider="?attr/dividerHorizontal"
     android:showDividers="end">
+    <!-- adapter view used to display contact name and number in auto suggestion feature -->
     <TextView
         android:id="@+id/contact_title"
         android:layout_width="match_parent"

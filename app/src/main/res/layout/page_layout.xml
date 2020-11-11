@@ -36,7 +36,7 @@
         tools:src="@drawable/app_logo"/>
     </com.google.android.material.circularreveal.cardview.CircularRevealCardView-->
 
-    <!-- external library for circular image view -->
+    <!-- external library for circular image view used in FTI screen-->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/boarding_image"
         android:layout_width="180dp"

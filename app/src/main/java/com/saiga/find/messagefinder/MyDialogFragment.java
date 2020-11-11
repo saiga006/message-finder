@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-
+/**
+ * Custom dialog for auto suggestion feature
+ */
 public class MyDialogFragment extends DialogFragment {
 
     public MyDialogFragment() {
@@ -42,6 +44,7 @@ public class MyDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // When user presses dismiss,
                         // call this so that, when user comes back to the app, the permission dialog doesn't appear again
+                        // this will contack picker option to appear
                         ((MainActivity)MyDialogFragment.this.requireActivity()).setPopup(true);
 
                     }
@@ -50,6 +53,7 @@ public class MyDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // when user presses neutral, mark auto suggestion as off in persistent storage
+                        // so that contact picker can be used instead
                         ((MainActivity)MyDialogFragment.this.requireActivity()).setUserConfig(true);
                     }
                 });

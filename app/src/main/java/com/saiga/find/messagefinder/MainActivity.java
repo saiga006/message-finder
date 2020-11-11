@@ -19,8 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
 import androidx.core.content.ContextCompat;
 // framework independent activity class, appears & behaves same across all platform versions
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
+//import androidx.loader.content.CursorLoader;
+//import androidx.loader.content.Loader;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 //for persisting the state between rotation, other runtime configuration changes
@@ -70,7 +70,7 @@ import java.util.Set;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher {
 
     private static final String CONFIG_MSG = "saved the config to capture SMS packets";
     private static final String triggerStatus = "Triggered!";
@@ -115,15 +115,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static SharedPreferences config = null;
 
     // look whether read contacts permission is granted for this app.
-    // serves as a check for auto suggestion popup
-    // currently unused
-    private static boolean isRequestDiagDisabled = false;
+    // serves as one of the check for auto suggestion popup
+    private boolean isRequestDiagDisabled = false;
 
     // flag to mark onboard activity start and completion states
     private static boolean showOnboarding = false;
 
     // flag to monitor whether contact picker feature was used recently
     private boolean isContactPicked = false;
+
+
+
+
+
+    // used to register text watcher listener and to unregister listener
+    TextInputLayout contact_number_layout = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             showOnboarding = true;
             // start onboard activity if it is the first time user installation
             startActivity(new Intent(this, Onboarding.class));
+            // this calls the ondestroy of this activity, when onboarding is launched
             this.finish();
         } else {
             showOnboarding = false;
@@ -165,47 +172,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // listen to the contact number field and throw error,
         // if it is wrong, disable trigger button in such cases
-        final TextInputLayout contact_number_layout = findViewById(R.id.contact_input_layout);
-        contact_number_layout.getEditText().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        contact_number_layout = findViewById(R.id.contact_input_layout);
+        contact_number_layout.getEditText().addTextChangedListener(this);
 
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // if the contact number field has more numbers or if it has any other character
-                // other than number, then throw error in UI and set helper text for user
-                if (s.length() > 10 || s.toString().matches("(?!^\\d+$)^.+$")) {
-                    contact_number_layout.setError("Doesn't meet the input format/limit !");
-                    contact_number_layout.setErrorIconDrawable(R.drawable.ic_block_24dp);
-                    contact_number_layout.setErrorEnabled(true);
-                    contact_number_layout.setErrorIconOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            contact_number_layout.getEditText().getText().clear();
-                        }
-                    });
-                    trigButton.setBackgroundColor(getColor(R.color.material_on_background_disabled));
-                    trigButton.setEnabled(false);
-                } else {
-                    contact_number_layout.setErrorEnabled(false);
-                    contact_number_layout.setHelperTextEnabled(true);
-                    trigButton.setBackgroundResource(R.drawable.rounded_button_gradient);
-                    trigButton.setEnabled(true);
-                }
-                Log.d(TAG, "some on change listener : " + start + before + count);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        // Initialise cursor adapter with contact layout and contents to be
-        // fetched from contacts provider
-        setupContactAdapter();
         final AutoCompleteTextView contactTextView = (AutoCompleteTextView) findViewById(R.id.contact_value);
         // Create the loader callback object to query the contacts content provider async using a cursor loader
         // cursor loader and filter query provider doesn't work with each other very well, so better drop using loader
@@ -250,30 +220,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-        contactTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // capture the contact name from the selected user account and display it in the notification
-                TextView contactTitle = (TextView) view.findViewById(R.id.contact_title);
-                insertContactName(contactTitle.getText().toString());
-                Log.d(TAG,"selected phone contact" + contactTitle.getText() );
-            }
-        });
-        // passes the text, on field selection by the cursor
-        contactAdapter.setCursorToStringConverter(new SimpleCursorAdapter.CursorToStringConverter() {
-            @Override
-            public CharSequence convertToString(Cursor cursor) {
-                String phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                return spliceNumber(phoneNumber);
-            }
-        });
 
-        // setup the adaptor with the auto complete textview,
-        contactTextView.setAdapter(contactAdapter);
 
         // ask contact permission before showing suggestions ....
         // check dont show again is pressed by user in earlier case
         if (!checkUserConfig()) {
+            // Initialise cursor adapter with contact layout and contents to be
+            // fetched from contacts provider
+            setupContactAdapter();
+            // we attach list item click listener, only if auto suggestion is enabled by user,
+            // by default auto suggestion is disabled in the app
+            contactTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // capture the contact name from the selected user account and display it in the notification
+                    TextView contactTitle = (TextView) view.findViewById(R.id.contact_title);
+                    insertContactName(contactTitle.getText().toString());
+                    Log.d(TAG,"selected phone contact" + contactTitle.getText() );
+                }
+            });
+            // passes the text, on user selection of corresponding field pointed by the cursor
+            contactAdapter.setCursorToStringConverter(new SimpleCursorAdapter.CursorToStringConverter() {
+                @Override
+                public CharSequence convertToString(Cursor cursor) {
+                    String phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    // removed country code and returns 10 digit mobile number
+                    return spliceNumber(phoneNumber);
+                }
+            });
+
+            // setup the adaptor with the auto complete textview,
+            contactTextView.setAdapter(contactAdapter);
+
+            Log.d(TAG,"Check user Config is false");
             if (checkReadContactPermission()){
                 //deprecated -- loader callbacks, instead FilterQueryProvider fits to our scenario
               //  getSupportLoaderManager().initLoader(CONTACT_LOADER_ID,new Bundle(),contactsLoader);
@@ -633,7 +612,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }  else {
             // we defer the dialog message approx. by two seconds, so that it appears natural to user.
             // this offloads the oncreate execution time.
-            if (!isRequestDiagDisabled && !showOnboarding) {
+            if (!showOnboarding) {
                 Handler delayShowingDialog = new Handler(getMainLooper());
                 delayShowingDialog.postDelayed(new Runnable() {
                     @Override
@@ -663,7 +642,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //before spamming the user check the shared preference file for existing config
     private boolean checkUserConfig(){
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        return sharedPreferences.getBoolean("autoSuggDisabled",false);
+        return sharedPreferences.getBoolean("autoSuggDisabled",true);
     }
 
     // setting user config of disabling auto suggestion feature
@@ -723,5 +702,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         });
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // if the contact number field has more numbers or if it has any other character
+        // other than number, then throw error in UI and set helper text for user
+        if (s.length() > 10 || s.toString().matches("(?!^\\d+$)^.+$")) {
+            contact_number_layout.setError("Doesn't meet the input format/limit !");
+            contact_number_layout.setErrorIconDrawable(R.drawable.ic_block_24dp);
+            contact_number_layout.setErrorEnabled(true);
+            contact_number_layout.setErrorIconOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    contact_number_layout.getEditText().getText().clear();
+                }
+            });
+            // if user has entered wrong number, prevent the user from hitting the trigger button
+            trigButton.setBackgroundColor(getColor(R.color.material_on_background_disabled));
+            trigButton.setEnabled(false);
+        } else {
+            // manages the state when user types contact number correctly after a misspelled scenario
+            contact_number_layout.setErrorEnabled(false);
+            contact_number_layout.setHelperTextEnabled(true);
+            trigButton.setBackgroundResource(R.drawable.rounded_button_gradient);
+            trigButton.setEnabled(true);
+        }
+        Log.d(TAG, "some on change listener : " + start + before + count);
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // unregister our on text change listener from edit text field
+        contact_number_layout.getEditText().removeTextChangedListener(this);
+    }
+
 
 }

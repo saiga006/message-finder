@@ -20,7 +20,10 @@ import java.util.HashSet;
 import java.util.Objects;
 
 
-
+/**
+ * Performs pattern matching with the keywords against the received SMS messages
+ * and invokes our sms foreground service to trigger priority alert
+ */
 public class SMSReceiver extends BroadcastReceiver {
 
     public static final String TAG = "SMSReceiver";
