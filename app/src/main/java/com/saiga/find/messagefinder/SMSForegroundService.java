@@ -20,8 +20,8 @@ import android.os.IBinder;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 // for accessing user configured ringtone to play as our notification tone
-import android.media.Ringtone;
-import android.media.RingtoneManager;
+//import android.media.Ringtone;
+//import android.media.RingtoneManager;
 import android.net.Uri;
 // to decide the android api usage based on user device
 import android.os.Build;
@@ -35,6 +35,9 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Manages the Priority Notification and ringtone Playback
+ */
 public class SMSForegroundService extends Service implements MediaPlayer.OnPreparedListener {
     // foreground service start & stop intent actions
 
@@ -44,8 +47,10 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
     // for playing vibration in notification
     private Vibrator vibratorService;
     // for ringtone availability and playing the ringtone
-    Uri ringUri;
-    Ringtone ringTone;
+   // Uri ringUri;
+ //   Ringtone ringTone;
+
+    // manages the playback of default ringtone
     MediaPlayer mediaPlayer;
     private AudioManager audioManager;
 
@@ -53,6 +58,9 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
     private static final String channelId = "123";
     // notification  Number to control notification func.
     private static final int notificationId = 123;
+
+    // android resource for default app ringtone for alerts
+    //private static final String priorityRingtoneId = "android.resource://com.saiga.find.messagefinder/raw/priority_ringtone";
 
     // stores the user configured volume
     private int current_vol_index;
@@ -87,9 +95,10 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
         // Todo
         //mp.setWakeMode(this, PowerManager.);
 
+        //@deprecated, now we use default ringtone instead of it
         // gets the uri of content provider that manages user ringtone values
-        ringUri = RingtoneManager.getActualDefaultRingtoneUri(this,RingtoneManager.TYPE_RINGTONE);
-        Log.d(TAG,"Print the ringtone Uri" + ringUri);
+        //ringUri = RingtoneManager.getActualDefaultRingtoneUri(this,RingtoneManager.TYPE_RINGTONE);
+        //Log.d(TAG,"Print the ringtone Uri" + ringUri);
         // Notification manager
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // Notification Channel is needed from Android O onwards, earlier version doesn't have this new API.
@@ -169,12 +178,12 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
                     .setSmallIcon(R.drawable.notification_mf_icon)
                     .build();
 
-            // gets the ringtone object from the content provider --  user configured.
-             ringTone= RingtoneManager.getRingtone(this,ringUri);
+            // @deprecated gets the ringtone object from the content provider --  user configured.
+            // ringTone= RingtoneManager.getRingtone(this,ringUri);
 
-            if(ringTone==null){
-                Log.d(TAG,"default ringtone is empty");
-            }
+//            if(ringTone==null){
+//                Log.d(TAG,"default ringtone is empty");
+//            }
 
             // alarm playing functionality, plays alarm maximum volume with vibration,
             // restores to the user configured volume, when  the notification is dismissed
@@ -202,6 +211,7 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
             stopSelf();
         }
             // we don't want to restart our service, incase of low memory, to avoid mocking the user
+            // since this is one time service, it will be invoked when there is a priority message
             return START_NOT_STICKY;
     }
 
@@ -218,7 +228,10 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
     **  handles media player state machine and volume state of alarm playback
      */
     private void initialiseAlarmPlayback(){
-
+        // default ringtone tied to this app resource, we use this to avoid the unwanted permission
+        // that we requested from the user in earlier scenario
+        String priorityRingtoneId = "android.resource://" + getPackageName() + "/raw/priority_ringtone";
+        Log.d(TAG," Priority URI " + priorityRingtoneId);
         try {
             // if media player is currently playing and there is new notification
             // then pause the playback and start from beginning
@@ -227,8 +240,14 @@ public class SMSForegroundService extends Service implements MediaPlayer.OnPrepa
                 mediaPlayer.seekTo(0);
                 mediaPlayer.start();
             } else {
-                // sets the media player audio source to ringtone URI(user configured)
-                mediaPlayer.setDataSource(this, ringUri);
+                // @deprecated sets the media player audio source to ringtone URI(user configured)
+                // use default app ringtone
+                //mediaPlayer.setDataSource(this, ringUri);
+
+                //we instead select the data source from the resource file, to avoid the excess
+                // permission we added to read user storage earlier
+                mediaPlayer.setDataSource(this,Uri.parse(priorityRingtoneId));
+
                 // sets the stream, in which audio has to be played, in our case, it is alarm stream
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
                 //registers for media player callback, because it will take long time, if

@@ -11,8 +11,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- permission needed to receive contacts value from contacts provider for auto suggestions -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <!-- permission needed to access user configured ringtone not falling under phone defaults -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <!-- we are temporarily adding largeheap as true,  which will be removed, once the images are scaled down and
      bitmap size is reduced -->
     <application

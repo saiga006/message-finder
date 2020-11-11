@@ -76,12 +76,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String triggerStatus = "Triggered!";
     private static final String clearStatus = "Cleared!";
     private static final String smsPermission = Manifest.permission.RECEIVE_SMS;
-    private static final String readStoragePermission = Manifest.permission.READ_EXTERNAL_STORAGE;
+  //  private static final String readStoragePermission = Manifest.permission.READ_EXTERNAL_STORAGE;
     private static final String readContactsPermission = Manifest.permission.READ_CONTACTS;
     private static final String TAG = "Sms Receiver";
     private static final String ALERT_MSG = "Keyword for alert is empty!";
     private static final String READ_SMS_NOTIFICATION_MSG = "Enable READ SMS permission in App Permissions";
-    private static final String READ_STORAGE_NOTIFICATION_MSG = "Enable Read Storage permission in App Permissions";
+    // deprecated
+    //private static final String READ_STORAGE_NOTIFICATION_MSG = "Enable Read Storage permission in App Permissions";
     private static final String SHOW_USER_MSG = "Some permissions needs to be enabled to work properly";
     // to uniquely identify a loader by loader manager
     //private static final int CONTACT_LOADER_ID = 123 ;
@@ -102,12 +103,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // snackbar objects for individual permissions
     private Snackbar smsPermSnackbar = null;
-    private Snackbar storagePermSnackbar = null;
+   //@deprecated
+    //private Snackbar storagePermSnackbar = null;
 
     // Loader for handling cursor object from Contacts Provider
     // and updating the contact provider with the cursor
 
     //private LoaderManager.LoaderCallbacks<Cursor> contactsLoader = null;
+
+    // default config file for this app
     private static SharedPreferences config = null;
 
     // look whether read contacts permission is granted for this app.
@@ -117,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // flag to mark onboard activity start and completion states
     private static boolean showOnboarding = false;
+
+    // flag to monitor whether contact picker feature was used recently
     private boolean isContactPicked = false;
 
     @Override
@@ -431,13 +437,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean checkSmsPermission(){
         boolean mPermGranted = false;
-        // check if the permissions have been granted before
-        if((ContextCompat.checkSelfPermission(getApplicationContext(),smsPermission)== PackageManager.PERMISSION_GRANTED) && (ContextCompat.checkSelfPermission(getApplicationContext(),readStoragePermission) == PackageManager.PERMISSION_GRANTED)) {
+        // check if the sms permission have been granted before
+        if((ContextCompat.checkSelfPermission(getApplicationContext(),smsPermission)== PackageManager.PERMISSION_GRANTED)) {
             mPermGranted = true;
         }  else {
             Log.d(TAG,"Request Permissions is invoked");
             // throw a system dialog to request permission from user, if permission hasn't been granted before
-            requestPermissions(new String[]{smsPermission,readStoragePermission},permRequestCode);
+            requestPermissions(new String[]{smsPermission},permRequestCode);
         }
         return mPermGranted;
     }
@@ -448,7 +454,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         // uniquely identifies our request to sms & read external storage permission by android framework
         if (requestCode==permRequestCode){
-            if ((grantResults.length>0) && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+            if ((grantResults.length>0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 // save the SMS configuration to trigger notification, when permission is granted
                 setSmsConfig();
             } else if ((grantResults.length>0) && grantResults[0] == PackageManager.PERMISSION_DENIED)  {
@@ -465,29 +471,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             })
                             .setActionTextColor(getColor(R.color.primaryTextColor));;
                     smsPermSnackbar.show();
-                    //Log.d(TAG,"should show rationale");
-                    Log.d(TAG, "navigate/suggest user to choose the permission from settings");
-                } else {
-                    // show user message via snackbar about the missing permissions
-                    Snackbar.make(mUserMsgLayout, SHOW_USER_MSG, Snackbar.LENGTH_LONG).show();
-                }
 
-
-            } else if ((grantResults.length>0) && grantResults[1] == PackageManager.PERMISSION_DENIED) {
-
-                if (!shouldShowRequestPermissionRationale(readStoragePermission)) {
-                    // invoked when user has rejected our requested and clicked the permission dialog to
-                    // to never show again
-                    // need to navigate the user to new settings app
-                    storagePermSnackbar =  Snackbar.make(mUserMsgLayout, READ_STORAGE_NOTIFICATION_MSG, Snackbar.LENGTH_INDEFINITE)
-                            .setAction("SET PERMISSIONS", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    navigateToAppPermissions();
-                                }
-                            })
-                            .setActionTextColor(getColor(R.color.primaryTextColor));
-                    storagePermSnackbar.show();
                     //Log.d(TAG,"should show rationale");
                     Log.d(TAG, "navigate/suggest user to choose the permission from settings");
                 } else {
@@ -577,12 +561,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             smsPermSnackbar.dismiss();
             smsPermSnackbar = null;
         }
-        if (storagePermSnackbar!=null){
-            storagePermSnackbar.dismiss();
-            storagePermSnackbar = null;
-        }
 
-        // navigates the user to settings page, if he presses the dont ask again option
+
+
+
+
+
+        //@deprecated -- no more storage permission is used
+//        if (storagePermSnackbar!=null){
+//            storagePermSnackbar.dismiss();
+//            storagePermSnackbar = null;
+//        }
+
+
+ // navigates the user to settings page, if he presses the dont ask again option
         // in system permission dialog
         navigateToSettings.postDelayed(new Runnable() {
             @Override
