@@ -12,11 +12,10 @@
     <!-- permission needed to receive contacts value from contacts provider for auto suggestions -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <!-- we are temporarily adding largeheap as true,  which will be removed, once the images are scaled down and
-     bitmap size is reduced -->
+
     <application
         android:icon="@mipmap/app_logo"
-        android:largeHeap="true"
+
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
