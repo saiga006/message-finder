@@ -18,7 +18,17 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   - On receiving notification, ringtone is played at high volume, even if the phone is in silent mode, uses alarm stream at full volume.
   - In some phones, it works in DND mode, as it uses alarm category for notification
   - OnBoarding Screen for FTI by User
-  
+
+##### Beta 2.9.0 Changelog:
+  - Added support for auto suggestion experimental feature through app settings, by default it is disabled for user 
+  - Added support for default ringtone inside the app resource to be used for priority alerts
+  - New icons and modified the app name to "Priority Alerts" as it is synonym with the functionality
+  - Refactored permission dialog flow and removed the dependencies for read external storage and large heap feature
+  - Bug fix:
+      1. Efficient solution for bitmap rendering is proposed to fix the onboarding crash issue appeared in low end
+         devices
+
+ 
 ##### Beta 2.5.0 Changelog:
   - Added support for app settings screen, user can now see their saved config after reboots and closing the app too.
   - Displays saved app configurations, app versions and added auto suggestion as an experimental feature
