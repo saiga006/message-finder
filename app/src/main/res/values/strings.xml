@@ -19,7 +19,7 @@
 
     <string name="app_version">App Version</string>
     <string name="app_version_key">app_version_key</string>
-    <string name="current_app_version">2.5.0</string>
+    <string name="current_app_version">2.9.0</string>
 
     <string name="auto_suggestion_feature">Auto Suggestion</string>
     <string name="auto_suggestion_key">autosuggestion_key</string>
