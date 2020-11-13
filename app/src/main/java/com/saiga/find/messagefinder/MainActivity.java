@@ -390,7 +390,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int clear_position = 0;
                 //get shared preference file specific to this app, to clear the saved config if it exists
                 SharedPreferences.Editor savedEditor =config.edit();
-                savedEditor.clear();
+                savedEditor.remove("contact");
+                savedEditor.remove("message");
+                savedEditor.remove("contact_name");
+                //savedEditor.clear();
                 savedEditor.apply();
                 /* deprecated : stop the service to remove the foreground notification & deregister sms receiver
                 //this.stopService(serviceIntent);
