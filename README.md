@@ -117,5 +117,10 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   - Proguard and Apk Size Reduction [Writeup](https://medium.com/androiddevelopers/practical-proguard-rules-examples-5640a3907dc9)
   - Add Onboarding Screen [Tutorial](https://www.youtube.com/watch?v=byLKoPgB7yA)
   - Add Circular ImageView [Library](https://github.com/hdodenhof/CircleImageView)
+  - Loading Large Bitmaps Efficiently [Android Guide](https://developer.android.com/topic/performance/graphics/load-bitmap),
+    [StackOverflow](https://stackoverflow.com/questions/21392972/how-to-load-large-images-in-android-and-avoiding-the-out-of-memory-error)
+  - Contact Picker [Tutorial](https://www.crazygeeksblog.com/2017/01/android-contact-picker-example/)
+  - Play default Ringtone [Tutorial](https://abhiandroid.com/androidstudio/add-audio-android-studio.html)
+  - App Settings Screen and App preferences [Blog Post](https://medium.com/@JakobUlbrich/building-a-settings-screen-for-android-part-1-5959aa49337c)
   - Obviously StackOverflow for issues during development and bug fixing :-)
   
