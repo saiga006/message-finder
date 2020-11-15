@@ -18,6 +18,10 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   - Triggers notification, when any one of the keywords are matched with received message.
   - On receiving notification, ringtone is played at high volume, even if the phone is in silent mode.
   - OnBoarding Screen for FTI by User
+  
+##### Beta 2.9.1 Changelog (Play Internal Variant):
+  - Removed the contacts permission and disabled the experimental auto suggestion feature currently
+    (Only Release Binary is available)
 
 ##### Beta 2.9.0 Changelog:
   - Added support for auto suggestion experimental feature through app settings, by default it is disabled for user 
