@@ -8,15 +8,15 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   1. User inputs contact number(optional) and the keyword(required), for which SOS kind of notification will be raised.
   2. Press trigger button to save the config.
   3. So that the app uses it everytime, when a sms is received and validates it, even after reboot it works.
-  4. User needs to accept the READ SMS permission and READ External Storage permission(for ringtone access) or else the app wouldn't work fine as expected.
+  4. User needs to accept the READ SMS permission or else the app wouldn't work fine as expected.
   5. To stop the SOS app functionality, press the clear config button.
+  6. Users can see their saved config on pressing settings icon inside the app
 
 ### Features:
-  
-  - Now, it supports only multiple keyword as input to identify the text (either in CSV or space seperated format).
-  - Triggers notification on when the keyword is matched with received message with vibration, colored notification along with audio playback
-  - On receiving notification, ringtone is played at high volume, even if the phone is in silent mode, uses alarm stream at full volume.
-  - In some phones, it works in DND mode, as it uses alarm category for notification
+
+  - It supports multiple keywords as input to identify the text (either in comma or space seperated format).
+  - Triggers notification, when any one of the keywords are matched with received message.
+  - On receiving notification, ringtone is played at high volume, even if the phone is in silent mode.
   - OnBoarding Screen for FTI by User
 
 ##### Beta 2.9.0 Changelog:
