@@ -1,7 +1,7 @@
 # message-finder
 An app to trigger **notifications** when receiving **priority messages**(*determined by user keyword*) 
 
-## Beta Release V2.0.0
+<img src="https://github.com/saiga006/message-finder/blob/master/priority_notifications.png" >
 
 ### How to use:
 
@@ -11,6 +11,8 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   4. User needs to accept the READ SMS permission or else the app wouldn't work fine as expected.
   5. To stop the SOS app functionality, press the clear config button.
   6. Users can see their saved config on pressing settings icon inside the app
+  
+  <img src="https://github.com/saiga006/message-finder/blob/master/2.png" >
 
 ### Features:
 
@@ -18,12 +20,16 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   - Triggers notification, when any one of the keywords are matched with received message.
   - On receiving notification, ringtone is played at high volume, even if the phone is in silent mode.
   - OnBoarding Screen for FTI by User
+
+  <img src="https://github.com/saiga006/message-finder/blob/master/5.png" width="400" height="225" >
   
-##### Beta 2.9.1 Changelog (Play Internal Variant):
+## Beta Release V2.9.1
+
+#### Beta 2.9.1 Changelog (Play Internal Variant):
   - Removed the contacts permission and disabled the experimental auto suggestion feature currently
     (Only Release Binary is available)
 
-##### Beta 2.9.0 Changelog:
+#### Beta 2.9.0 Changelog:
   - Added support for auto suggestion experimental feature through app settings, by default it is disabled for user 
   - Added support for default ringtone inside the app resource to be used for priority alerts
   - New icons and modified the app name to "Priority Alerts" as it is synonym with the functionality
@@ -33,7 +39,7 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
          devices
 
  
-##### Beta 2.5.0 Changelog:
+#### Beta 2.5.0 Changelog:
   - Added support for app settings screen, user can now see their saved config after reboots and closing the app too.
   - Displays saved app configurations, app versions and added auto suggestion as an experimental feature
   - More preference is given to contact picker as it is less error prone and doesn't require read contacts permission
@@ -125,6 +131,6 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
     [StackOverflow](https://stackoverflow.com/questions/21392972/how-to-load-large-images-in-android-and-avoiding-the-out-of-memory-error)
   - Contact Picker [Tutorial](https://www.crazygeeksblog.com/2017/01/android-contact-picker-example/)
   - Play default Ringtone [Tutorial](https://abhiandroid.com/androidstudio/add-audio-android-studio.html)
-  - App Settings Screen and App preferences [Blog Post](https://medium.com/@JakobUlbrich/building-a-settings-screen-for-android-part-1-5959aa49337c)
+  - App Settings Screen [Blog Post](https://medium.com/google-developer-experts/exploring-android-jetpack-preferences-8bcb0b7bdd14) and App preferences [Blog Post](https://medium.com/@JakobUlbrich/building-a-settings-screen-for-android-part-1-5959aa49337c)
   - Obviously StackOverflow for issues during development and bug fixing :-)
   
