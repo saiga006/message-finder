@@ -101,6 +101,14 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   3. <img src="https://github.com/saiga006/message-finder/blob/master/Input_Field_ActivityScreen.png" width="150" height="300">
   
   > "Example user input"
+  
+  4. <img src="https://github.com/saiga006/message-finder/blob/master/privacy policy.png" width="150" height="300">
+  
+  > "App Settings Screen"
+  
+  5. <img src="https://github.com/saiga006/message-finder/blob/master/FTI1.png" width="150" height="300"> <img src="https://github.com/saiga006/message-finder/blob/master/FTI2.png" width="150" height="300"> <img src="https://github.com/saiga006/message-finder/blob/master/FTI3.png" width="150" height="300">
+  
+  > "FTI Screens"
 
 #### Resources:
   - [Android Developer Guide - Notifications](https://developer.android.com/guide/topics/ui/notifiers/notifications)
