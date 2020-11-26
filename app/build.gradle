@@ -9,16 +9,16 @@ android {
         minSdkVersion(23)
         // guaranteed to work property in Android 9, obeying Android 9 behavior changes
         targetSdkVersion(29)
-        versionCode 9
-        versionName "2.9"
+        versionCode 14
+        versionName "2.9.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
             // enabling minify to shrink the resources and remove unused files in the build
-             minifyEnabled true
-             shrinkResources true
-             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//             minifyEnabled true
+//             shrinkResources true
+//             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled true

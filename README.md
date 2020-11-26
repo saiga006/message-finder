@@ -23,11 +23,11 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
 
   <img src="https://github.com/saiga006/message-finder/blob/master/5.png" width="400" height="225" >
   
-## Beta Release V2.9.1
+## Beta Release V2.9.6
 
-#### Beta 2.9.1 Changelog (Play Internal Variant):
+#### Beta 2.9.6 Changelog (Play Store Variant):
   - Removed the contacts permission and disabled the experimental auto suggestion feature currently
-    (Only Release Binary is available)
+    (Source Code is available)
 
 #### Beta 2.9.0 Changelog:
   - Added support for auto suggestion experimental feature through app settings, by default it is disabled for user 

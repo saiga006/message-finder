@@ -6,6 +6,7 @@
     <PreferenceCategory android:title="@string/app_pref_category1" android:key="@string/app_category_key1">
         <SwitchPreference android:title="@string/auto_suggestion_feature"
             android:defaultValue="false"
+            android:enabled="false"
             android:key="@string/auto_suggestion_key"
             android:summaryOff="@string/auto_suggestion_off"
             android:summaryOn="@string/auto_suggestion_on"/>
@@ -22,7 +23,24 @@
             android:key="@string/app_version_key"
             android:enabled="false"
             android:shouldDisableView="false"
-            android:summary="@string/current_app_version"/>
+            android:summary="@string/current_app_version"/>       
+           <Preference android:title="@string/app_privacy_policy"
+
+
+
+
+            android:enabled="true"
+            android:summary="@string/user_guidance">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/privacy_url"/>
+           </Preference>
+
+
+
+
+
+
+
 
     </PreferenceCategory>
 

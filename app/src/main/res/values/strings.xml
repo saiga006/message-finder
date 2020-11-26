@@ -19,12 +19,15 @@
 
     <string name="app_version">App Version</string>
     <string name="app_version_key">app_version_key</string>
-    <string name="current_app_version">2.9.0</string>
+    <string name="current_app_version">2.9.6</string>
+    <string name="app_privacy_policy">Privacy Policy</string>
+    <string name="privacy_url">http://unchartedtech.work/privacy-policy</string>
+    <string name="user_guidance">Click to view App Privacy Policy</string>
 
     <string name="auto_suggestion_feature">Auto Suggestion</string>
     <string name="auto_suggestion_key">autosuggestion_key</string>
     <string name="auto_suggestion_on">Currently Enabled, restart the app for the feature</string>
-    <string name="auto_suggestion_off">Auto Suggestion is currently disabled, to enable it contact permission is needed</string>
+    <string name="auto_suggestion_off">Currently Disabled, will be available in next version</string>
 
     <string name="dialog_text">Do you want to enable auto suggestion feature for contact number ?</string>
     <string name="helper_text_keyword">Keywords must be in comma or space separated format</string>
@@ -33,9 +36,9 @@
     <string name="OnboardingTitle2">"PRIORITY ALERTS"</string>
     <string name="OnboardingTitle3">"PRIVACY"</string>
 
-    <string name="OnboardingDesc1">"Supports multiple keywords scanning through the SMS.\nServes as an SOS app"</string>
-    <string name="OnboardingDesc2">"Enables Priority Notification even in silent mode.\nTriggers Notification when the user configured keyword is received"</string>
-    <string name="OnboardingDesc3">"We follow all the android best practices to protect your privacy.We never collect data.\nDesigned inline with android permission guidelines"</string>
+    <string name="OnboardingDesc1">"Supports multiple keywords, informs when the user configured keyword is received via SMS".\n We need user approval to read incoming SMS in background to provide this feature"</string>
+    <string name="OnboardingDesc2">"Enables Notification even in silent mode for the configured keywords"</string>
+    <string name="OnboardingDesc3">"We follow all the android best practices to protect your privacy.We never collect and share data to anyone"</string>
     <string name="prev">Back</string>
     <string name="next">Next</string>
     <string name="finish">Finish</string>
