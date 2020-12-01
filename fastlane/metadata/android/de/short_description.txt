@@ -1,0 +1,1 @@
+Informiert, wenn eine eingehende SMS ein von Dir konfiguriertes Keyword enthält

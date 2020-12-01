@@ -1,0 +1,1 @@
+Informs you when receiving SMS matches with configured keywords
