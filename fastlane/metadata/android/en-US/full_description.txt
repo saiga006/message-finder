@@ -1,5 +1,10 @@
 <i>Priority Alerts</i> is an app to trigger notifications when receiving priority messages (determined by user keywords).
 
+<b>UseCase</b>
+Acts as SOS alerter, user can configure some keywords like "help" or "emergency" keywords in this app, and the contact number likely they are going to receive the same.
+
+So even when the user puts the phone in silent mode or in vibrate mode, the app alerts the user through customized ringtone, when the incoming SMS contents matches the configured keywords.
+
 <b>Features:</b>
 
 1. It supports multiple keywords as input to identify the text (either in comma or space separated format).

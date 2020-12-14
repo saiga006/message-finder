@@ -1,0 +1,1 @@
+Removed the contacts permission and disabled the experimental auto suggestion feature currently (Source Code is available)
