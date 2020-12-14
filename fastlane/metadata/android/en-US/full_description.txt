@@ -1,0 +1,18 @@
+<i>Priority Alerts</i> is an app to trigger notifications when receiving priority messages (determined by user keywords).
+
+<b>Features:</b>
+
+1. It supports multiple keywords as input to identify the text (either in comma or space separated format).
+2. Informs user, when any one of the keywords are matched with received message.
+3. Informs user even in silent mode.
+4. On Boarding Screen for first time users is shown upon app installation.
+
+<b>How to use:</b>
+
+1. User inputs contact number(optional) and the keyword(required), the user will be informed when the keyword is found in any of the incoming SMS.
+2. Press trigger button to save the config. So that the app uses it every time, when a SMS is received and validates it, even after reboot it works.
+3. User needs to accept the READ SMS permission or else the app wouldn't able to validate the SMS packets against the user configured keyword. This is the core functionality of the app, without this the app wouldn't work.
+4. To stop the app functionality, press the clear config button.
+5. Users can see their saved config on pressing settings icon inside the app
+
+We don't use Ads and we never share user data via any means.
