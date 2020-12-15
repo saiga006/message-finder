@@ -19,7 +19,7 @@
 
     <string name="app_version">App Version</string>
     <string name="app_version_key">app_version_key</string>
-    <string name="current_app_version">2.9.6</string>
+    <string name="current_app_version">2.9.8</string>
     <string name="app_privacy_policy">Privacy Policy</string>
     <string name="privacy_url">http://unchartedtech.work/privacy-policy</string>
     <string name="user_guidance">Click to view App Privacy Policy</string>
@@ -27,7 +27,7 @@
     <string name="auto_suggestion_feature">Auto Suggestion</string>
     <string name="auto_suggestion_key">autosuggestion_key</string>
     <string name="auto_suggestion_on">Currently Enabled, restart the app for the feature</string>
-    <string name="auto_suggestion_off">Currently Disabled, will be available in next version</string>
+    <string name="auto_suggestion_off">Currently Disabled, enabling it will request read contacts permission</string>
 
     <string name="dialog_text">Do you want to enable auto suggestion feature for contact number ?</string>
     <string name="helper_text_keyword">Keywords must be in comma or space separated format</string>

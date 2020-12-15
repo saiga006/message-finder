@@ -1,0 +1,1 @@
+Adding auto suggestion feature to the app, accessible via settings(disabled by default), access contact numbers directly through app, requires read contact permission

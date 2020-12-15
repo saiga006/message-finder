@@ -7,10 +7,10 @@ android {
         applicationId "com.saiga.find.messagefinder"
         // backward compatibility supported till android M
         minSdkVersion(23)
-        // guaranteed to work property in Android 9, obeying Android 9 behavior changes
+        // guaranteed to work property in Android 10, obeying Android 10 behavior changes
         targetSdkVersion(29)
-        versionCode 14
-        versionName "2.9.6"
+        versionCode 16
+        versionName "2.9.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

@@ -6,7 +6,7 @@
     <PreferenceCategory android:title="@string/app_pref_category1" android:key="@string/app_category_key1">
         <SwitchPreference android:title="@string/auto_suggestion_feature"
             android:defaultValue="false"
-            android:enabled="false"
+            android:enabled="true"
             android:key="@string/auto_suggestion_key"
             android:summaryOff="@string/auto_suggestion_off"
             android:summaryOn="@string/auto_suggestion_on"/>
