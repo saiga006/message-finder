@@ -23,6 +23,12 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
 
   <img src="https://github.com/saiga006/message-finder/blob/master/5.png" width="400" height="225" >
   
+## Download the app at:
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80">](https://f-droid.org/en/packages/com.saiga.find.messagefinder/)
+
+  
 ## Beta Release V2.9.6
 
 #### Beta 2.9.6 Changelog (Play Store Variant):
