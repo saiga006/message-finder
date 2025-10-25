@@ -116,6 +116,10 @@ An app to trigger **notifications** when receiving **priority messages**(*determ
   
   > "FTI Screens"
 
+#### Medium Arcticles ( which describes this app design principles along with UML diagrams and steps to publish such an app in an app store):
+  - [App design principles with UML diagrams](https://medium.com/the-uncharted/publishing-an-android-app-d8e3bca598b3)
+  - [Debugging and publishing of android app](https://medium.com/the-uncharted/publishing-an-android-app-part-2-7b8787861e62)
+
 #### Resources:
   - [Android Developer Guide - Notifications](https://developer.android.com/guide/topics/ui/notifiers/notifications)
   - [Android Developer Guide - MediaPlayer](https://developer.android.com/guide/topics/media/mediaplayer)
